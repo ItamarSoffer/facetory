@@ -11,15 +11,14 @@ import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
 
 
-export default function AppRouter() {
+export default function AppRouter(props) {
 
         return(
             <Router>
                     <Switch>
 
                         {
-                            // !this.props.isLogged ?
-                            false ?
+                            ! props.isLogged ?
 
                                 <div>
                                     <Route path="/" component={LoginPage}/>
