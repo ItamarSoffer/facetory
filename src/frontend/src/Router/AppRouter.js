@@ -3,6 +3,7 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
+    Redirect
 } from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import HomePage from "../Pages/HomePage";
@@ -27,17 +28,17 @@ export default function AppRouter(props) {
                                 <div>
 
                                     {/* TODO: adapt url */}
-                                    <Route path="/story/:story_id/view" component={StoryViewerPage}/>
+                                    <Route path="/story/:story_id/view" exact={true} component={StoryViewerPage}/>
 
-                                    <Route path="/story/:story_id" component={StoryMainPage}/>
+                                    <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage}/>
 
-                                    <Route path="/story/:story_id/editor" component={SlideEditorPage}/>
+                                    <Route path="/story/:story_id"  exact={true} component={StoryMainPage}/>
 
                                     <Route path="/create" component={CreateStoryPage}/>
 
                                     <Route path="/login" component={LoginPage}/>
 
-                                    <Route exact={true} path="/" component={HomePage}/>
+                                    <Route exact path="/" component={HomePage}/>
 
                                 </div>
                         }
