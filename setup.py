@@ -2,7 +2,8 @@
 import setuptools
 
 requirements = [
-    "Flask",
+    "fastapi",
+    "uvicorn",
     "MongoEngine"
 ]
 
@@ -11,6 +12,6 @@ setuptools.setup(
     version="1.0",
     license="MIT",
     author="kks",
-    packages=['backend'],
+    packages=['src.backend'],
     install_requires=requirements,
 )
