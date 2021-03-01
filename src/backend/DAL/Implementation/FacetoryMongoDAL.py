@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
+from ..FacetoryDAL import *
 
-class FaceFactoryDAL(ABC):
+class MongoDAL(FacetoryDAL):
     def get_all_users():
         pass
 

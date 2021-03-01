@@ -12,6 +12,6 @@ setuptools.setup(
     version="1.0",
     license="MIT",
     author="kks",
-    packages=['src.backend'],
+    packages=['src'],
     install_requires=requirements,
 )
