@@ -2,6 +2,7 @@
 import './App.css';
 import React from 'react';
 import AppRouter from "./Router/AppRouter";
+import 'antd/dist/antd.css';
 
 function App() {
   return(
