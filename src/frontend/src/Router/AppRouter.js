@@ -9,6 +9,7 @@ import HomePage from "../Pages/HomePage";
 import CreateStoryPage from "../Pages/CreateStoryPage";
 import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
+import StoryMainPage from "../Pages/StoryMainPage";
 
 
 export default function AppRouter(props) {
@@ -26,9 +27,11 @@ export default function AppRouter(props) {
                                 <div>
 
                                     {/* TODO: adapt url */}
-                                    <Route path="/view" component={StoryViewerPage}/>
+                                    <Route path="/story/:story_id/view" component={StoryViewerPage}/>
 
-                                    <Route path="/editor" component={SlideEditorPage}/>
+                                    <Route path="/story/:story_id" component={StoryMainPage}/>
+
+                                    <Route path="/story/:story_id/editor" component={SlideEditorPage}/>
 
                                     <Route path="/create" component={CreateStoryPage}/>
 
