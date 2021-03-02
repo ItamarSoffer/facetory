@@ -1,12 +1,12 @@
 import React from 'react';
-import {LoadingPage} from "../Components/LoadingPage/LoadingPage";
+import {LoadingComponent} from "../Components/LoadingComponent/LoadingComponent";
 
 
 export default function HomePage () {
     return (
         <div>
             HomePage
-            <LoadingPage/>
+            <LoadingComponent/>
         </div>
     )
 }
