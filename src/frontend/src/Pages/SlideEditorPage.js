@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import '../styles/slideEditorPage.scss';
+import React, { useEffect, useState, useRef } from 'react';
 import Canvas from "../Components/Canvas";
 import { Form, Input, Button, Card, Typography } from 'antd';
-import useImage from "use-image";
 
 //COMPONENTS
 import Colors from '../Components/Colors'
+import Recorder from '../Components/Recorder/Recorder';
 
 const { Title } = Typography;
 
@@ -67,6 +66,8 @@ const slide =
 }
 
 export default function SlideEditorPage() {
+    const recordBlob = useRef(null)
+    const keyWordsTimes = useRef(null)
 
     const [color, setColor] = useState(slide.canvas.backgroundColor);
     const [backgroundImageSrc, setBackgroundImageSrc] = useState(slide.canvas.imageUrl);
@@ -78,6 +79,17 @@ export default function SlideEditorPage() {
     const [colorsOpen, setColorsOpen] = useState(false);
     const [stickersOpen, setStickersOpen] = useState(false);
 
+    const onRecorderFinish = (blob, array) => {
+        recordBlob.current = blob
+        keyWordsTimes.current = array
+    }
+
+    const onRecordDelete = () => {
+        recordBlob.current = null
+        keyWordsTimes.current = null
+    }
+
+
     const toggleColors = () => {
         setColorsOpen(!colorsOpen);
     }
@@ -86,43 +98,48 @@ export default function SlideEditorPage() {
         setStickersOpen(!stickersOpen);
     }
 
-    return (
-        <div className="border-box">
-            <div className='main-container' >
-                <Title level={1} style={{ textAlign: "center" }}>New Slide </Title>
-                <Canvas
-                    backgroundImageSrc={backgroundImageSrc}
-                    backgroundImagePosition={backgroundImagePosition}
-                    backgroundImageAngle={backgroundImageAngle}
-                    backgroundImageSize={backgroundImageSize}
-                    backgroundColor={color}
-                    stickers={stickers}
-                />
-                <div className='slide-toolbar'>
-                    <img
-                        onClick={toggleStickers}
-                        className='toolbar-Button'
-                        src={'/my-icons/stickers.svg'}
-                    />
-                    <img
-                        onClick={toggleColors}
-                        className='toolbar-Button'
-                        src={'/my-icons/background.svg'}
-                    />
-                    <Colors
-                        currentColor={color}
-                        setColor={(color) => setColor(color)}
-                        open={colorsOpen}
-                    />
-                    <u className='toolbar-button'>החלפת תמונה</u>
-                </div>
-                <div> recording </div>
-                <Button type="primary" htmlType="submit" className="login-form-button" style={{ width: '350px' }}>
-                    save slide
-                      </Button>
-            </div>
-            <div className='sidebar'>
 
+    return (
+        <div className='slide-editor-page'>
+            <div>
+                <div>
+                    <div className='title'>שקופית חדשה</div>
+                    {false ? <div className='upload-image-conteiner'>
+                        <div>
+                            <img src='/my-icons/default-image.svg' />
+                            <div>העלאת תמונה</div>
+                        </div>
+                    </div> : <Canvas
+                            backgroundImageSrc={backgroundImageSrc}
+                            backgroundImagePosition={backgroundImagePosition}
+                            backgroundImageAngle={backgroundImageAngle}
+                            backgroundImageSize={backgroundImageSize}
+                            backgroundColor={color}
+                            stickers={stickers}
+                        />}
+                    <div className='sile-tool-bar'>
+                        <div
+                            onClick={toggleStickers}
+                        >
+                            <img src='/my-icons/smiley.svg' />
+                        </div>
+                        <div
+                            onClick={toggleColors}
+                        >
+                            <img src='/my-icons/color-fill.svg' />
+                        </div>
+                        <Colors
+                            currentColor={color}
+                            setColor={(color) => setColor(color)}
+                            open={colorsOpen}
+                        />
+                        <u className='toolbar-button'>החלפת תמונה</u>
+                    </div>
+                </div>
+                <Recorder
+                    onFinish={onRecorderFinish}
+                    onDelete={onRecordDelete}
+                />
             </div>
         </div>
     )
