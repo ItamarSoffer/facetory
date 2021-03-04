@@ -3,11 +3,13 @@ from src.backend.DAL.Implementation.facetory_mongo_dal import MongoDAL
 from fastapi.responses import UJSONResponse
 from src.backend.Utils import path_utils
 from src.backend.Utils import picture_utils
+from src.backend.Router.Users import user_api
 import json
 
 router = APIRouter(
     prefix="/Story",
     tags=["Story"],
+    dependencies=[Depends(user_api.auth_required)],
     responses={404: {"description": "Not found"}},
 )
 
@@ -175,6 +177,9 @@ def save_slide(user_uid: str, story_id: str, data: str):
 @router.post("/SaveSlide", response_class=UJSONResponse)
 def delete_slide(user_uid: str, slide_id: int):
     pass
+
+
+
 """
 {imageUrl: string,
 backgroundColor: string,

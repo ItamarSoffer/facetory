@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
-from ....backend.DAL.Implementation.FacetoryMongoDAL import *
-from os import urandom
-from struct import unpack
-from google.oauth2 import id_token
-from google.auth.transport.requests import Request
+from fastapi.responses import UJSONResponse
+from src.backend.DAL.Implementation.facetory_mongo_dal import *
+# from os import urandom
+# from struct import unpack
+# from google.oauth2 import id_token
+# from google.auth.transport.requests import Request
 
 
 router = APIRouter(
@@ -90,6 +91,6 @@ def auth_required(func):
             return func(validated_firebase_obj['sub'], *argv)
         except Exception as e:
             return {
-                "status": "unauthorized"
+                "status": "unauthorized",
                 "description": "User token is invalid"
             }
