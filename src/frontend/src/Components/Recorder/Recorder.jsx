@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactMic } from 'react-mic'
 import ClickEffect from '../../generic-components/ClickEffect';
 
@@ -6,10 +6,19 @@ const Recorder = ({ onFinish }) => {
 
     const [isRecording, setIsRecording] = useState(false)
     const [recording, setRecording] = useState(null)
+    const [isPlaying, setIsPlaying] = useState(null)
 
     const startDate = useRef()
     const keyWordList = useRef([])
     const audio = useRef()
+
+    useEffect(() => {
+        return () => {
+            window.removeEventListener('mouseup', stopKeyWord)
+            window.removeEventListener('touchend', stopKeyWord)
+            if (audio.current) audio.current.removeEventListener('ended', () => { setIsPlaying(false) })
+        }
+    }, [])
 
     const startRecording = () => {
         setIsRecording(true)
@@ -44,41 +53,66 @@ const Recorder = ({ onFinish }) => {
         keyWordList.current = []
     }, [keyWordList])
 
-    const playAudio = ()=>{
-        audio.current = new Audio(recording)
+    const playAudio = () => {
+        console.log(audio.current)
+        if (!audio.current) {
+            audio.current = new Audio(recording)
+            audio.current.addEventListener('ended', () => { setIsPlaying(false) })
+        }
         audio.current.play()
+        setIsPlaying(true)
+    }
+
+    const pauseAudio = () => {
+        audio.current.pause()
+        setIsPlaying(false)
     }
 
     return (
-        <div id='recorder'>
-            {recording ? 
-            
-            <div onClick={playAudio} >
-            sfsfsff
-            </div>
-                :
-                <> 
-                <ReactMic
-                    record={isRecording}
-                    onStop={onStop}
-                    visualSetting='frequencyBars'
-                    timeSlice={10000}
-                />
-                    <div
-                        onTouchStart={onKeyWord}
-                        onMouseDown={onKeyWord}
-                        className={isRecording ? 'push-button' : 'push-button push-button-disabled'}>
+        <div >
+            <div id='recorder'>
+                {recording ?
+
+                    <div className='play-pause-btn' onClick={isPlaying ? pauseAudio : playAudio} >
+                        {isPlaying ?
+                            <img width='100%' src='/my-icons/PauseBtn.svg' />
+                            :
+                            <img width='100%' src='/my-icons/PlayBtn.svg' />
+                        }
                     </div>
-                    <div
-                        onClick={isRecording ? stopRecording : startRecording}
-                        className={isRecording ? "recording-animation-on" : 'recording-animation'}>
-                        <div
-                            className='microphone'>
-                            {isRecording ? <img src='/my-icons/frecuency.svg' /> : <img src='/my-icons/microphone.svg' />}
+                    :
+                    <>
+                        <ReactMic
+                            record={isRecording}
+                            onStop={onStop}
+                            visualSetting='frequencyBars'
+                            timeSlice={10000}
+                        />
+                        <div style={{ display: 'flex' }}>
+                            <div
+                                onTouchStart={onKeyWord}
+                                onMouseDown={onKeyWord}
+                                className={isRecording ? 'push-button' : 'push-button push-button-disabled'}>
+                                {/* <div> </div> */}
+                            </div>
+                            <div style={{ color: '#373A42' }}>
+                                לחצו על המיקרופון כדי להתחיל להקליט.<br />
+                        החזיקו את הכפתור האדום בזמן אמירת שם הילד.
+                    </div>
                         </div>
-                    </div>
-                </>
-            }
+
+                        <div
+                            onClick={isRecording ? stopRecording : startRecording}
+                            className={isRecording ? "recording-animation-on" : 'recording-animation'}>
+                            <div
+                                className='microphone'>
+                                {isRecording ? <img src='/my-icons/frecuency.svg' /> : <img src='/my-icons/microphone.svg' />}
+                            </div>
+                        </div>
+                    </>
+                }
+            </div>
+           <div className='delete-recording'> מחק הקלטה</div>
         </div>
     );
 };

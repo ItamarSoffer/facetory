@@ -1,1 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="85.219" height="85.219" viewBox="0 0 85.219 85.219"><defs><style>.a{fill:#4b7cff;}.b,.c{fill:#fff;}.c{stroke:#fff;opacity:0;}.d{stroke:none;}.e{fill:none;}.f{filter:url(#a);}</style><filter id="a" x="0" y="0" width="85.219" height="85.219" filterUnits="userSpaceOnUse"><feOffset dy="3" input="SourceAlpha"/><feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-opacity="0.161"/><feComposite operator="in" in2="b"/><feComposite in="SourceGraphic"/></filter></defs><g transform="translate(9 6)"><g class="f" transform="matrix(1, 0, 0, 1, -9, -6)"><circle class="a" cx="33.609" cy="33.609" r="33.609" transform="translate(9 6)"/></g><path class="b" d="M12.828.533a.5.5,0,0,1,.8,0l12.228,16.3a.5.5,0,0,1-.4.8H1a.5.5,0,0,1-.4-.8Z" transform="translate(45.555 20) rotate(90)"/><g class="c" transform="translate(26.918 31.793)"><rect class="d" width="1.707" height="2.561" rx="0.854"/><rect class="e" x="0.5" y="0.5" width="0.707" height="1.561" rx="0.354"/></g><g class="c" transform="translate(26.918 31.793)"><rect class="d" width="1.707" height="2.561" rx="0.854"/><rect class="e" x="0.5" y="0.5" width="0.707" height="1.561" rx="0.354"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 68" width="68" height="68">
+	<style>
+		tspan { white-space:pre }
+		.shp0 { fill: #4b7cff } 
+		.shp1 { fill: #ffffff } 
+		.shp2 { fill: none;stroke: #ffffff } 
+	</style>
+	<g id="Layer">
+		<g id="Layer">
+			<path id="Layer" class="shp0" d="M33.61 67.22C15.02 67.22 0 52.19 0 33.61C0 15.02 15.02 0 33.61 0C52.19 0 67.22 15.02 67.22 33.61C67.22 52.19 52.19 67.22 33.61 67.22Z" />
+		</g>
+		<path id="Layer" class="shp1" d="M45.02 32.83C45.08 32.87 45.13 32.93 45.17 33C45.2 33.07 45.22 33.15 45.22 33.23C45.22 33.31 45.2 33.38 45.17 33.45C45.13 33.52 45.08 33.58 45.02 33.63L28.72 45.86C28.65 45.91 28.56 45.95 28.47 45.95C28.37 45.96 28.28 45.94 28.2 45.9C28.12 45.86 28.05 45.8 28 45.72C27.95 45.64 27.92 45.55 27.92 45.46L27.92 21C27.92 20.91 27.95 20.82 28 20.74C28.05 20.66 28.12 20.59 28.2 20.55C28.28 20.51 28.37 20.49 28.47 20.5C28.56 20.51 28.65 20.54 28.72 20.6L45.02 32.83Z" />
+		<g id="Layer" style="opacity: 0">
+			<path id="Layer" class="shp1" d="M27.77 31.79L27.77 31.79C28.24 31.79 28.63 32.17 28.63 32.65L28.63 33.5C28.63 33.97 28.24 34.35 27.77 34.35L27.77 34.35C27.3 34.35 26.92 33.97 26.92 33.5L26.92 32.65C26.92 32.17 27.3 31.79 27.77 31.79Z" />
+			<path id="Layer" class="shp2" d="M27.77 32.29L27.77 32.29C27.97 32.29 28.13 32.45 28.13 32.65L28.13 33.5C28.13 33.7 27.97 33.85 27.77 33.85L27.77 33.85C27.58 33.85 27.42 33.7 27.42 33.5L27.42 32.65C27.42 32.45 27.58 32.29 27.77 32.29Z" />
+		</g>
+		<g id="Layer" style="opacity: 0">
+			<path id="Layer" class="shp1" d="M27.77 31.79L27.77 31.79C28.24 31.79 28.63 32.17 28.63 32.65L28.63 33.5C28.63 33.97 28.24 34.35 27.77 34.35L27.77 34.35C27.3 34.35 26.92 33.97 26.92 33.5L26.92 32.65C26.92 32.17 27.3 31.79 27.77 31.79Z" />
+			<path id="Layer" class="shp2" d="M27.77 32.29L27.77 32.29C27.97 32.29 28.13 32.45 28.13 32.65L28.13 33.5C28.13 33.7 27.97 33.85 27.77 33.85L27.77 33.85C27.58 33.85 27.42 33.7 27.42 33.5L27.42 32.65C27.42 32.45 27.58 32.29 27.77 32.29Z" />
+		</g>
+	</g>
+</svg>
