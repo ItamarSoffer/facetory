@@ -39,13 +39,9 @@ export default function AppRouter(props) {
 
                             <Route path="/login" component={LoginPage} />
 
-<<<<<<< HEAD
-                                    <Route path='/image-popup' component={ImagePopup} />
+                            <Route path='/image-popup' component={ImagePopup} />
 
-                                    <Route exact path="/" component={HomePage}/>
-=======
                             <Route exact path="/" component={HomePage} />
->>>>>>> 3b89579d3f37c83ca8e1de5e63dddbdffdd42597
 
                         </div>
                 }
