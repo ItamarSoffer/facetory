@@ -85,4 +85,4 @@ class MongoDAL(FacetoryDAL):
     def get_user(self, google_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             if AppUser.objects(google_id=google_id):
-                AppUser.objects.get(google_id=google_id)
+                return AppUser.objects.get(google_id=google_id)
