@@ -15,7 +15,7 @@ class MongoDAL(FacetoryDAL):
         self.host = host
         self.port = port
 
-    def insert_story(self, user_id: int, story_name: str, child_name: str, gender: str):
+    def insert_story(self, user_id: str, story_name: str, child_name: str, gender: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             story = Story(story_name=story_name, child_name=child_name, gender=gender).save()
             user = AppUser.objects.get(user_id=user_id)
@@ -23,7 +23,7 @@ class MongoDAL(FacetoryDAL):
             user.save()
         return story
 
-    def update_story(self, story_id: int, story_name: str, child_name: str, gender: str):
+    def update_story(self, story_id: str, story_name: str, child_name: str, gender: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             story = Story.objects.get(story_id=story_id)
             story.story_name = story_name
@@ -31,15 +31,15 @@ class MongoDAL(FacetoryDAL):
             story.save()
         return story
 
-    def get_story(self, story_id: int):
+    def get_story(self, story_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             return Slide.objects(story_id=story_id)
 
-    def get_stories(self, user_id: int):
+    def get_stories(self, user_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             return AppUser.objects.get(user_id=user_id).stories
 
-    def insert_slide(self, story_id: int, background_color: str, background_picture_id: int, pictures_list: list[int]):
+    def insert_slide(self, story_id: str, background_color: str, background_picture_id: int, pictures_list: list[int]):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             story_slide = Slide(background_color=background_color, background_picture_id=background_picture_id).save()
             for picture_id in pictures_list:
@@ -50,11 +50,11 @@ class MongoDAL(FacetoryDAL):
             story.slides.append(story_slide)
         return story_slide
 
-    def get_slide(self, slide_id: int):
+    def get_slide(self, slide_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             return Slide.objects(slide_id=slide_id)
 
-    def get_slides(self, story_id: int):
+    def get_slides(self, story_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             return Slide.objects(story_id=story_id)
 
@@ -63,14 +63,14 @@ class MongoDAL(FacetoryDAL):
             pic = Picture(path=path, angle=angle, size=size, coordinate_x=x, coordinate_y=y).save()
         return pic
 
-    def insert_picture_to_slide(self, slide_id: int, path: str, x: float, y: float, angle: float, size: float):
+    def insert_picture_to_slide(self, slide_id: str, path: str, x: float, y: float, angle: float, size: float):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             pic = Picture(path=path, angle=angle, size=size, coordinate_x=x, coordinate_y=y).save()
             story_slide = Slide.objects.get(slide_id=slide_id)
             story_slide.pictures.append(pic)
         return pic
 
-    def get_picture(self, picture_id: int):
+    def get_picture(self, picture_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             return Picture.objects.get(picture_id=picture_id)
 
