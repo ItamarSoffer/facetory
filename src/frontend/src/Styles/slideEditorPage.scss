@@ -11,9 +11,8 @@
 
     .upload-image-conteiner {
         background-color: #f4f8ff;
-        padding: 8vh 0;
-        width: 70%;
-        margin-right: 5vh;
+        padding: 6vh 0;
+        width: 50%;
 
 
         &>div {
@@ -21,17 +20,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 7vh;
+            padding: 6vh;
 
             img {
-                margin-bottom: 7vh;
-                height: 25vh;
+                margin-bottom: 5vh;
+                height: 20vh;
             }
 
             div {
                 color: white;
-                font-size: 1.6rem;
-                line-height: 1.6rem;
+                font-size: 1.4rem;
+                line-height: 1.4rem;
                 font-weight: 500;
             }
         }
@@ -43,7 +42,7 @@
 
         div {
             &:first-child {
-                margin-left: 3vw;
+                margin-left: 20px;
             }
 
             background-color: #4B7CFF;
@@ -55,8 +54,8 @@
             justify-content: center;
 
             img {
-                height: 4vh;
-                width: 4vh;
+                height: 3.5vh;
+                width: 3.5vh;
             }
         }
     }
