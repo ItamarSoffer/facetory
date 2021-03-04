@@ -127,7 +127,8 @@ def save_slide(user_uid: str, story_id: str, data: str):
         # TODO get picture from url and save the picture
         picture_bytes, picture_name = picture_utils.get_picture_data(jsonData["imageUrl"])
         background_picture_path = path_utils.generate_resource_path(user_uid=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
-        open(background_picture_path, "wb").write(picture_bytes).close()
+        with open(background_picture_path, "wb+") as picture_file:
+            picture_file.write(picture_bytes)
         thumbnail_path = picture_utils.create_picture_thumbnail(background_picture_path)
 
         backgroundColor = jsonData["backgroundColor"]
@@ -144,7 +145,8 @@ def save_slide(user_uid: str, story_id: str, data: str):
             for picture in jsonData["pictures"]:
                 picture_bytes, picture_name = picture["data"], picture["name"]
                 picture_path = path_utils.generate_resource_path(user_uid=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
-                open(picture_path, "wb").write(picture_bytes).close()
+                with open(picture_path, "wb+") as picture_file:
+                    picture_file.write(picture_bytes)
 
                 # inserting the picture into the db.
                 picture = dbDAL.insert_picture(path=picture_path, x=picture["x"], y=picture["y"], angle=picture["angle"], size=picture["size"])
