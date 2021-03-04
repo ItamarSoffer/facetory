@@ -5,7 +5,8 @@ requirements = [
     "fastapi",
     "uvicorn",
     "MongoEngine",
-    "aiofiles"
+    "aiofiles",
+    "ujson"
 ]
 
 setuptools.setup(

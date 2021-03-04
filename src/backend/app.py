@@ -7,6 +7,7 @@ from Router.Stories import storyApi
 app = FastAPI()
 # Mounting the Resources folder in order to allow access to photos, audio and more.
 app.mount("/Resources", StaticFiles(directory="src/Resources"), "Resources")
+app.include_router(storyApi.router)
 
 @app.get('/')
 def home():
