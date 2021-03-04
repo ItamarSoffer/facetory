@@ -2,16 +2,25 @@ import React, { useState, useEffect, useRef } from "react";
 import { Stage, Layer, Image } from "react-konva";
 import useImage from "use-image";
 
-const URLImage = ({ image }) => {
+const URLImage = ({ image, dragUrl }) => {
   const [img] = useImage(image.src);
+  const imageRef = useRef();
   return (
     <Image
+      ref={imageRef}
       image={img}
       x={image.x}
       y={image.y}
-      // I will use offset to set origin to the center of the image
       offsetX={img ? img.width / 2 : 0}
       offsetY={img ? img.height / 2 : 0}
+      draggable
+      onDragStart={(e) => {
+        console.log("started dragging!!");
+        dragUrl.current = e.target.src;
+      }}
+      onDragEnd={() => {
+        console.log("ended drag!");
+      }}
     />
   );
 };
@@ -25,8 +34,8 @@ const Canvas = (props) => {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    console.log(images)
-  }, [images])
+    console.log(images);
+  }, [images]);
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -34,6 +43,7 @@ const Canvas = (props) => {
       setHeight(wrapperRef.current.offsetHeight);
     }
   }, [wrapperRef]);
+
   return (
     <div>
       <img
@@ -46,6 +56,7 @@ const Canvas = (props) => {
       />
       <div
         onDrop={(e) => {
+          console.log("dropped!!");
           e.preventDefault();
           // register event position
           stageRef.current.setPointersPositions(e);
@@ -69,10 +80,14 @@ const Canvas = (props) => {
             src={props.imageUrl}
             alt="תמונה"
           />
-          <Stage width={width ? width : 0} height={height ? height : 0} ref={stageRef}>
+          <Stage
+            width={width ? width : 0}
+            height={height ? height : 0}
+            ref={stageRef}
+          >
             <Layer width={width ? width : 0} height={height ? height : 0}>
               {images.map((image, index) => {
-                return <URLImage key={index} image={image} />;
+                return <URLImage key={index} image={image} dragUrl={dragUrl} />;
               })}
             </Layer>
           </Stage>
