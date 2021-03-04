@@ -23,13 +23,6 @@ export function LoginPage ({login, isLogged, history}) {
         </div>
     )*/
     return <div>
-        <IfFirebaseAuthed>
-            {({user}) => {
-                console.log('****************');
-                user.getIdToken().then((v)=>{console.log(v)});
-                return <div>You are authenticated</div>;
-            }}
-        </IfFirebaseAuthed>
         <LoginForm loginHandler={loginHandler} />
     </div>
 
