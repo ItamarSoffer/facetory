@@ -1,10 +1,11 @@
 import React from 'react';
+import Recorder from '../Components/Recorder/Recorder';
 
 
-export default function SlideEditorPage () {
+export default function SlideEditorPage() {
     return (
         <div>
-            SlideEditorPage
+            <Recorder onFinish={(blob, array) => { console.log(blob, array) }} />
         </div>
     )
 }
