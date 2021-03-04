@@ -6,10 +6,10 @@ connect("tell_story")
 class Picture(Document):
     picture_id = ObjectIdField()
     path = StringField(required=True)
-    angle = IntField(required=True)
-    size = IntField(required=True)
-    coordinate_x = IntField(required=True)
-    coordinate_y = IntField(required=True)
+    angle = FloatField(required=True)
+    size = FloatField(required=True)
+    coordinate_x = FloatField(required=True)
+    coordinate_y = FloatField(required=True)
 
 
 class Slide(Document):
@@ -32,7 +32,7 @@ class Story(Document):
 
 class AppUser(Document):
     user_id = ObjectIdField()
-    name = StringField(max_length=50)
+    name = StringField(max_length=50, unique=True)
     password = StringField(max_length=50)
     stories = ListField(ReferenceField(Story))
 
