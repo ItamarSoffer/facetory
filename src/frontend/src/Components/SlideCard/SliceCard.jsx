@@ -27,7 +27,8 @@ const SlideCard = props => {
               ...cardStyle
           }}
           {...cardProps}
-      />
+      >
+          </Card>
     )
 }
 
