@@ -6,7 +6,8 @@ requirements = [
     "uvicorn",
     "MongoEngine",
     "aiofiles",
-    "ujson"
+    "ujson",
+    "Pillow"
 ]
 
 setuptools.setup(
