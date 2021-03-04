@@ -13,8 +13,7 @@ dbDAL = FacetoryDAL()
 
 @router.post("/GetStories", response_class=UJSONResponse)
 def GetAllStories(user_token: str):
-    try
-    {
+    try:
         all_stories = dbDAL.get_all_stories(user_token)
 
         # Creating the relevent json to send in the response:
@@ -26,37 +25,29 @@ def GetAllStories(user_token: str):
                 "gender": story.gender,
                 "thumbnail": story.thumbnail_path})
         response = {"status": "success", "stories": story_list}
-    }
-    except
-    {
+    except:
         response = {"status": "failed", "stories": []}
-    }
 
     return response
 
 @router.post("/CreateStory", response_class=UJSONResponse)
 def CreateStory(user_token: str, story_name: str):
-    try
-    {
+    try:
         story = dbDAL.CreateStory(user_token, story_name)
 
         # Creating the relevent json to send in the response:
         return {"status": "success",
                 "storyId": story.id})
-    }
-    except
-    {
+    except:
         return {"status": "failed",
                 "storyId": -1})
-    }
 
 @router.post("/GetSlides", response_class=UJSONResponse)
 def GetSlides(user_token: str, story_id: int):
-    try
-    {
+    try:
         story_slides = dbDAL.get_slides(user_token, story_id)
 
-        # Creating the relevent json to send in the response:
+        # Creating the relevent json to send in the response.
         slide_list = []
         for slide in story_slides:
             response.append("slideName": slide.slide_name,
@@ -65,45 +56,36 @@ def GetSlides(user_token: str, story_id: int):
                 "audio_path": slide.audio_path,
                 "picture_path": slide.picture_path})
         response = {"status": "success", "slides": slide_list}
-    }
-    except
-    {     
+    except:
          response = {"status": "failed", "slides": []}   
-    }
     return response
 
 @router.post("/GetSlide", response_class=UJSONResponse)
 def GetSlide(user_token: str, story_id: int, slide_id: int):
-    try
-    {
+    try:
         slide = dbDAL.get_slide(user_token, story_id, slide_id)
+        # TODO: JSONIFY on the slide
         response = {"status": "success", "slide": slide}
-    }
-    except
-    {     
+    except:
          response = {"status": "failed", "slide": ""}   
-    }
     return response
 
 @router.post("/GetStoryThumbnail", response_class=UJSONResponse)
 def GetStoryThumbnail(user_token: str, story_id: int):
-    try
-    {
+    try:
         story = dbDAL.get_story(user_token, story_id)
+
+        # Displaying the thumbnail of the first slide as the story's thumbnail
         first_slide_thumbnail = story.slides[0].thumbnail_path
         response = {"status":"success",
                 "thumbnail": first_slide_thumbnail}
-    }
-    except
-    {     
+    except:
          response = {"status": "failed", "thumbnail": ""}   
-    }
     return response
 
 @router.post("/GetSlidesThumbnails", response_class=UJSONResponse)
 def GetSlidesThumbnails(user_token: str, story_id: int):
-    try
-    {
+    try:
         story_slides = dbDAL.get_slides(user_token, story_id)
 
         # Creating the relevent json to send in the response:
@@ -114,11 +96,8 @@ def GetSlidesThumbnails(user_token: str, story_id: int):
 
         response =  {"status": "success",
                     "thumbnails": thumbnail_list}
-    }
-    except
-    {     
+    except:
          response = {"status": "failed", "thumbnail": ""}   
-    }
     return response
 
 @router.post("/SaveSlide", response_class=UJSONResponse)
