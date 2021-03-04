@@ -9,7 +9,6 @@ import json
 router = APIRouter(
     prefix="/Story",
     tags=["Story"],
-    #dependencies=[Depends(user_api.auth_required)],
     responses={404: {"description": "Not found"}},
 )
 
@@ -38,6 +37,7 @@ def get_all_stories(user_uid: str):
     return response
 
 @router.post("/CreateStory", response_class=UJSONResponse)
+@auth_required
 def create_story(user_uid: str, story_name: str, child_name: str, gender: str):
     try:
         story = dbDAL.insert_story(user_id=user_uid, story_name=story_name, child_name=child_name, gender=gender)
