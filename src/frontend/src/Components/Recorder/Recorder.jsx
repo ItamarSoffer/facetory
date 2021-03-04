@@ -3,7 +3,7 @@ import { ReactMic } from 'react-mic'
 import ClickEffect from '../../generic-components/ClickEffect';
 import Popup from '../general-components/Popup';
 
-const Recorder = ({ onFinish }) => {
+const Recorder = ({ onFinish, onDelete }) => {
 
     const [isRecording, setIsRecording] = useState(false)
     const [recording, setRecording] = useState(null)
@@ -99,7 +99,7 @@ const Recorder = ({ onFinish }) => {
                             </div>
                             <div style={{ color: '#373A42' }}>
                                 לחצו על המיקרופון כדי להתחיל להקליט.<br />
-                        החזיקו את הכפתור האדום בזמן אמירת שם הילד.
+                                החזיקו את הכפתור האדום בזמן אמירת שם הילד.
                     </div>
                         </div>
 
@@ -114,7 +114,7 @@ const Recorder = ({ onFinish }) => {
                     </>
                 }
             </div>
-            {recording ? <div onClick={()=>{setIsDeletePopupOpen(true)}} className='delete-recording'> מחק הקלטה</div> : <div className='delete-recording' ></div>}
+            {recording ? <div onClick={() => { setIsDeletePopupOpen(true) }} className='delete-recording'> מחק הקלטה</div> : <div className='delete-recording' ></div>}
 
             <Popup
                 onClose={() => { setIsDeletePopupOpen(false) }}
@@ -124,16 +124,17 @@ const Recorder = ({ onFinish }) => {
                     האם אתה בטוח שברצונך למחוק את ההקלטה?
                 </h2>
                 <div className='delete-recording-popup-buttons'>
-                    <div onClick={()=>{setIsDeletePopupOpen(false)}}>ביטול</div>
-                    <div onClick={()=>{
-                        audio.current.pause()
+                    <div onClick={() => { setIsDeletePopupOpen(false) }}>ביטול</div>
+                    <div onClick={() => {
+                        if (audio.current) audio.current.pause()
                         setIsDeletePopupOpen(false)
                         setIsPlaying(false)
                         setRecording(null)
                         audio.current = null
+                        if (onDelete && typeof onDelete === 'function') onDelete()
                     }}>אישור</div>
                 </div>
-           </Popup>
+            </Popup>
         </div>
     );
 };
