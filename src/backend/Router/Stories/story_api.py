@@ -26,7 +26,7 @@ def get_all_stories(user_uid: str):
         story_list = []
         for story in all_stories:
             response.append({"storyName": story.name,
-                "storyId": story.id,
+                "storyId": str(story.id),
                 "childName": story.child_name,
                 "gender": story.gender,
                 "thumbnail": story.thumbnail_path})
@@ -44,20 +44,20 @@ def create_story(user_uid: str, story_name: str, child_name: str, gender: str):
 
         # Creating the relevent json to send in the response:
         return {"status": "success",
-                "storyId": story.id}
+                "storyId": str(story.id)}
     except Exception as e:
         print(e)
         return {"status": "failed",
                 "storyId": -1}
 
-@router.post("/CreateStory", response_class=UJSONResponse)
-def update_story(user_uid:str, story_id: int, story_name: str, child_name: str, gender: str):
+@router.post("/UpdateStory", response_class=UJSONResponse)
+def update_story(user_uid:str, story_id: str, story_name: str, child_name: str, gender: str):
     try:
         story = dbDAL.update_story(story_id=story_id, story_name=story_name, child_name=child_name, gender=gender)
 
         # Creating the relevent json to send in the response:
         return {"status": "success",
-                "storyId": story.id}
+                "storyId": str(story.id)}
 
     except Exception as e:
         print(e)
@@ -65,22 +65,21 @@ def update_story(user_uid:str, story_id: int, story_name: str, child_name: str, 
                 "storyId": -1}
 
 @router.post("/CreateStory", response_class=UJSONResponse)
-def delete_story(user_uid:str, story_id: int):
+def delete_story(user_uid:str, story_id: str):
     pass
 
 @router.post("/GetSlides", response_class=UJSONResponse)
-def get_slides(user_uid: str, story_id: int):
+def get_slides(user_uid: str, story_id: str):
     try:
         story_slides = dbDAL.get_slides(story_id=story_id)
-
         # Creating the relevent json to send in the response.
         slide_list = []
         for slide in story_slides:
-            response.append({"slideName": slide.slide_name,
-                "slideId": slide.id,
-                "text": slide.text,
-                "audio_path": slide.audio_path,
-                "picture_path": slide.picture_path})
+            json_slide = json.loads(slide.to_json())
+            # super hacky code:
+            json_slide["id"] = json_slide["_id"]["$oid"]
+            slide_list.append(json_slide)
+            print(slide_list)
         response = {"status": "success", "slides": slide_list}
     except Exception as e:
         print(e)
@@ -88,7 +87,7 @@ def get_slides(user_uid: str, story_id: int):
     return response
 
 @router.post("/GetSlide", response_class=UJSONResponse)
-def get_slide(user_uid: str, story_id: int, slide_id: int):
+def get_slide(user_uid: str, story_id: str, slide_id: str):
     try:
         slide = dbDAL.get_slide(slide_id=slide_id)
         # TODO: JSONIFY on the slide
@@ -99,7 +98,7 @@ def get_slide(user_uid: str, story_id: int, slide_id: int):
     return response
 
 @router.post("/GetStoryThumbnail", response_class=UJSONResponse)
-def get_story_thumbnail(user_uid: str, story_id: int):
+def get_story_thumbnail(user_uid: str, story_id: str):
     try:
         story = dbDAL.get_slides(story_id=story_id)
 
@@ -113,14 +112,14 @@ def get_story_thumbnail(user_uid: str, story_id: int):
     return response
 
 @router.post("/GetSlidesThumbnails", response_class=UJSONResponse)
-def get_slides_thumbnails(user_uid: str, story_id: int):
+def get_slides_thumbnails(user_uid: str, story_id: str):
     try:
         story_slides = dbDAL.get_slides(story_id=story_id)
 
         # Creating the relevent json to send in the response:
         thumbnail_list = []
         for slide in story_slides:
-            response.append({"slideId": slide.id,
+            thumbnail_list.append({"slideId": str(slide.id),
                 "thumbnail": slide.thumbnail})
 
         response =  {"status": "success",
@@ -160,7 +159,7 @@ def save_slide(user_uid: str, story_id: str, data: str):
 
                 # inserting the picture into the db.
                 picture = dbDAL.insert_picture(path=picture_path, x=picture["x"], y=picture["y"], angle=picture["angle"], size=picture["size"])
-                picture_id_list.append(picture.id)
+                picture_id_list.append(str(picture.id))
 
         sticker_id_list = []
         for sticker in jsonData["stickers"]:
@@ -169,22 +168,22 @@ def save_slide(user_uid: str, story_id: str, data: str):
 
             # inserting the sticker data into the db.
             sticker = dbDAL.insert_picture(path=sticker_path, x=sticker["x"], y=sticker["y"], angle=sticker["angle"], size=sticker["size"])
-            sticker_id_list.append(sticker.id)
+            sticker_id_list.append(str(sticker.id))
 
-        # TODO: pass the thumb nail as well
         slide = dbDAL.insert_slide(path=background_picture_path,
             background_color=background_color,
             background_picture_id=background_picture.picture_id,
-            pictures_list=picture_id_list + sticker_id_list)
+            pictures_list=picture_id_list + sticker_id_list,
+            thumbnail_path=thumbnail_path)
 
-        response = {"status":"success", "slideId": slide.id}
+        response = {"status":"success", "slideId": str(slide.id)}
     except Exception as e:
         print(e)
         response = {"status": "failed"}
     return response
 
 @router.post("/SaveSlide", response_class=UJSONResponse)
-def delete_slide(user_uid: str, slide_id: int):
+def delete_slide(user_uid: str, slide_id: str):
     pass
 
 
