@@ -19,10 +19,10 @@ const Colors = (props) => {
     ])
 
     return (<div className='colors'>
-        {colors.current.map(color => {
+        {props.open && colors.current.map(color => {
             return <div
                 style={{ backgroundColor: color }}
-                className={`color-button ${props.currentColor === color&&'current-color'}`}
+                className={`color-button ${props.currentColor === color && 'current-color'}`}
                 onClick={() => props.setColor(color)}
             />
         })}
