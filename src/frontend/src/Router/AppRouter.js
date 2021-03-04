@@ -16,38 +16,42 @@ import ImagePopup from '../Components/imageComponents/ImagePopup';
 
 export default function AppRouter(props) {
 
-        return(
-            <Router>
-                    <Switch>
+    return (
+        <Router>
+            <Switch>
 
-                        {
-                            ! props.isLogged ?
+                {
+                    !props.isLogged ?
 
-                                <div>
-                                    <Route path="/" component={LoginPage}/>
-                                </div> :
-                                <div>
+                        <div>
+                            <Route path="/" component={LoginPage} />
+                        </div> :
+                        <div>
 
-                                    {/* TODO: adapt url */}
-                                    <Route path="/story/:story_id/view" exact={true} component={StoryViewerPage}/>
+                            {/* TODO: adapt url */}
+                            <Route path="/story/:story_id/view" exact={true} component={StoryViewerPage} />
 
-                                    <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage}/>
+                            <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage} />
 
-                                    <Route path="/story/:story_id"  exact={true} component={StoryMainPage}/>
+                            <Route path="/story/:story_id" exact={true} component={StoryMainPage} />
 
-                                    <Route path="/create" component={CreateStoryPage}/>
+                            <Route path="/create" component={CreateStoryPage} />
 
-                                    <Route path="/login" component={LoginPage}/>
+                            <Route path="/login" component={LoginPage} />
 
+<<<<<<< HEAD
                                     <Route path='/image-popup' component={ImagePopup} />
 
                                     <Route exact path="/" component={HomePage}/>
+=======
+                            <Route exact path="/" component={HomePage} />
+>>>>>>> 3b89579d3f37c83ca8e1de5e63dddbdffdd42597
 
-                                </div>
-                        }
-                    </Switch>
+                        </div>
+                }
+            </Switch>
 
-            </Router>
-        )
+        </Router>
+    )
 
 }
