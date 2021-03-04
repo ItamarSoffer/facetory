@@ -16,18 +16,20 @@ export const apiCreateStory = (userJwt, storyName, childName, gender, onReceive)
                 message.warning(response.data)
             }
             else if (response.status === 200){
-                message.success(`Story saved successfully 😄`, 1.5);
+                message.success(`Story Created successfully 😄`, 1.5);
                 onReceive(response.data.storyId);
             }
         });
 };
-export const apiUpdateStory = (storyId, storyName, childName) => {
+export const apiUpdateStory = (userJwt, storyId, storyName, childName, gender) => {
     const saveStoryApi = backendAPI.concat(`/UpdateStory`);
     return axios.post(saveStoryApi,
         {
+            'userId' : userJwt,
             storyId,
             storyName,
-            childName
+            childName,
+            gender
         }).then((response) => {
             console.log("resp", response);
             if (response.status === 201){

@@ -58,7 +58,8 @@ export const CreateStoryForm = ({storyId, setStoryId}) => {
         }else
         {
             console.log("finished update story form")
-            apiUpdateStory(storyId, Title, ChildName); 
+            const userToekn = window.localStorage.getItem('jwtToken');
+            apiUpdateStory(userToekn, storyId, Title, ChildName, genderRadioValue); 
         }
         };
     
