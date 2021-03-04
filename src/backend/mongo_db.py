@@ -16,8 +16,8 @@ class Slide(Document):
     background_picture = ReferenceField(Picture)
     pictures = ListField(ReferenceField(Picture))
     thumbnail = StringField(required=True)
-    text = StringField(required=True)
-    audio = StringField(required=True)
+    text = StringField()
+    audio = StringField()
 
 
 class Story(Document):
