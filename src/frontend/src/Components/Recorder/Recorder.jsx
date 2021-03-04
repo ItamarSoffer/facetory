@@ -5,8 +5,11 @@ import ClickEffect from '../../generic-components/ClickEffect';
 const Recorder = ({ onFinish }) => {
 
     const [isRecording, setIsRecording] = useState(false)
+    const [recording, setRecording] = useState(null)
+
     const startDate = useRef()
     const keyWordList = useRef([])
+    const audio = useRef()
 
     const startRecording = () => {
         setIsRecording(true)
@@ -34,32 +37,48 @@ const Recorder = ({ onFinish }) => {
     }
 
     const onStop = useCallback((blob) => {
+        console.log(blob)
         console.log(keyWordList.current)
-        if (onFinish && typeof onFinish === 'function') onFinish(blob, keyWordList.current)
+        if (onFinish && typeof onFinish === 'function') onFinish(blob.blobURL, keyWordList.current)
+        setRecording(blob.blobURL)
         keyWordList.current = []
     }, [keyWordList])
 
+    const playAudio = ()=>{
+        audio.current = new Audio(recording)
+        audio.current.play()
+    }
+
     return (
         <div id='recorder'>
-            <ReactMic
-                record={isRecording}
-                onStop={onStop}
-                visualSetting='frequencyBars'
-                timeSlice={10000}
-            />
-            <div
-                onTouchStart={onKeyWord}
-                onMouseDown={onKeyWord}
-                id='push-button'>
+            {recording ? 
+            
+            <div onClick={playAudio} >
+            sfsfsff
             </div>
-            <div
-                onClick={isRecording ? stopRecording : startRecording}
-                className={isRecording ? "recording-animation-on" : 'recording-animation'}>
-                <div
-                    className='microphone'>
-                    {isRecording ? <img src='/my-icons/frecuency.svg' /> : <img src='/my-icons/microphone.svg' />}
-                </div>
-            </div>
+                :
+                <> 
+                <ReactMic
+                    record={isRecording}
+                    onStop={onStop}
+                    visualSetting='frequencyBars'
+                    timeSlice={10000}
+                />
+                    <div
+                        onTouchStart={onKeyWord}
+                        onMouseDown={onKeyWord}
+                        className={isRecording ? 'push-button' : 'push-button push-button-disabled'}>
+                    </div>
+                    <div
+                        onClick={isRecording ? stopRecording : startRecording}
+                        className={isRecording ? "recording-animation-on" : 'recording-animation'}>
+                        <div
+                            className='microphone'>
+                            {isRecording ? <img src='/my-icons/frecuency.svg' /> : <img src='/my-icons/microphone.svg' />}
+                        </div>
+                    </div>
+                </>
+            }
         </div>
     );
 };
