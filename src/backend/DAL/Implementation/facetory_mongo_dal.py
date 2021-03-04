@@ -18,7 +18,7 @@ class MongoDAL(FacetoryDAL):
     def insert_story(self, user_id: str, story_name: str, child_name: str, gender: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             story = Story(name=story_name, child_name=child_name, gender=gender).save()
-            user = AppUser.objects.get(id=user_id)
+            user = AppUser.objects.get(google_id=user_id)
             user.stories.append(story)
             user.save()
         return story
