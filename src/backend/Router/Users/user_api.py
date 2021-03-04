@@ -25,7 +25,7 @@ def UserLogin(firebase_token:str): # (username:str, password:str):
         validated_firebase_obj['sub'] = firebase_token
 
         if not dbDAL.get_user(validated_firebase_obj['sub']):
-            dbDAL.insert_user(validated_firebase_obj['sub'])
+            dbDAL.insert_user(validated_firebase_obj['sub'], "kks")
 
         # real_pass = get_password(username) # TODO: see working
         # if not user:

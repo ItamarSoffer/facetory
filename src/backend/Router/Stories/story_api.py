@@ -9,7 +9,7 @@ import json
 router = APIRouter(
     prefix="/Story",
     tags=["Story"],
-    dependencies=[Depends(user_api.auth_required)],
+    #dependencies=[Depends(user_api.auth_required)],
     responses={404: {"description": "Not found"}},
 )
 

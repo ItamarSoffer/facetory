@@ -35,15 +35,7 @@ class MongoDAL(FacetoryDAL):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             return Slide.objects.get(id=story_id)
 
-<<<<<<< HEAD
-    def delete_story(self, story_id: int):
-        with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            Story.objects(id=story_id).first().delete()
-
-    def get_stories(self, user_id: int):
-=======
     def get_stories(self, user_id: str):
->>>>>>> 731544c269acdd14b06d08a1d126c1755f540aae
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             return AppUser.objects.get(id=user_id).stories
 
@@ -88,4 +80,7 @@ class MongoDAL(FacetoryDAL):
 
     def get_user(self, google_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            return AppUser.objects.get(google_id=google_id)
+            try:
+                return AppUser.objects.get(google_id=google_id)
+            except:
+                return False
