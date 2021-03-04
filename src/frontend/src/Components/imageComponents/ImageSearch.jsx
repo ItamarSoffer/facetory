@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import "../../styles/imageSearch.scss";
 import axios from "axios";
 
-const ImageSearch = () => {
+const ImageSearch = (props) => {
   const [searchString, setSearchString] = useState("");
   const [images, setImages] = useState([]);
+  const [clicked, setClicked] = useState(false);
   let cancelToken = axios.CancelToken.source();
   const apiKey = process.env.REACT_APP_PIXABAY_API_KEY;
 
@@ -30,13 +31,20 @@ const ImageSearch = () => {
     cancelToken.cancel();
     cancelToken = axios.CancelToken.source();
     const res = await axios.get(url, { cancelToken: cancelToken.token });
-    if (res)
+    if (res) {
+      setClicked(false);
       setImages(
         res.data.hits.map((image) => {
           return image.largeImageURL;
         })
       );
+    }
   }
+
+  const handleImageClick = (imageSource, index) => {
+    setClicked(index);
+    props.setSource(imageSource);
+  };
 
   return (
     <div className='search-container'>
@@ -47,12 +55,24 @@ const ImageSearch = () => {
           setSearchString(e.target.value);
           getImages(e.target.value);
         }}
+        placeholder=''
         value={searchString}
       />
-      <div className='image-picker'>
+      <div className={`image-picker`}>
         {images.length !== 0
-          ? images.map((image, index) => {
-              return <img key={index} src={image} />;
+          ? images.map((imageSource, index) => {
+              return (
+                <div className={clicked === index ? "clicked" : ""} key={index}>
+                  <img
+                    src={imageSource}
+                    onClick={() => {
+                      handleImageClick(imageSource, index);
+                    }}
+                  />
+                  <div></div>
+                  <img className='check' src='/my-icons/check.svg' />
+                </div>
+              );
             })
           : "לא נמצאו תוצאות"}
       </div>
