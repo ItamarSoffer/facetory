@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import UJSONResponse
 from src.backend.DAL.Implementation.facetory_mongo_dal import MongoDAL
+from firebase_admin import auth
 # from os import urandom
 # from struct import unpack
 # from google.oauth2 import id_token
@@ -18,14 +19,14 @@ dbDAL = MongoDAL()
 @router.post("/Login", response_class=UJSONResponse)
 def UserLogin(firebase_token:str): # (username:str, password:str):
     try:
-        # validated_firebase_obj = id_token.verify_firebase_token(firebase_token, Request())
-        # if not validated_firebase_obj:
-        #     raise ValueError    
-        validated_firebase_obj = {}
-        validated_firebase_obj['sub'] = firebase_token
+        validated_firebase_obj = auth.verify_if_token(firebase_token ,app=fb_ctx)
+        if not validated_firebase_obj:
+            raise ValueError    
+        # validated_firebase_obj = {}
+        # validated_firebase_obj['sub'] = firebase_token
 
         if not dbDAL.get_user(validated_firebase_obj['sub']):
-            dbDAL.insert_user(validated_firebase_obj['sub'], "kks")
+            dbDAL.insert_user(validated_firebase_obj['sub'], validated_firebase_obj['email'])
 
         # real_pass = get_password(username) # TODO: see working
         # if not user:
@@ -83,14 +84,14 @@ def UserLogin(firebase_token:str): # (username:str, password:str):
 def auth_required(func):
     def check_auth(firebase_token, *argv):
         try:
-            # validated_firebase_obj = id_token.verify_firebase_token(firebase_token, Request())
-            # if not validated_firebase_obj: # not userid_in_db(userId):
-            #     return {
-            #         "status": "unauthorized"
-            #         "description": "User token is invalid"
-            #     }
-            validated_firebase_obj = {}
-            validated_firebase_obj['sub'] = firebase_token
+            validated_firebase_obj = validated_firebase_obj = auth.verify_if_token(firebase_token ,app=fb_ctx)
+            if not validated_firebase_obj: # not userid_in_db(userId):
+                return {
+                    "status": "unauthorized"
+                    "description": "User token is invalid"
+                }
+            # validated_firebase_obj = {}
+            # validated_firebase_obj['sub'] = firebase_token
             return func(validated_firebase_obj['sub'], *argv)
         except Exception as e:
             return {
