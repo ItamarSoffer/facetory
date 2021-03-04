@@ -133,15 +133,17 @@ def save_slide(user_token: str, story_id: str, data: str):
             jsonData["imageAngle"],
             jsonData["imageSize"])
 
-        picture_id_list = []
-        for picture in jsonData["pictures"]:
-            picture_bytes, picture_name = picture["data"], picture["name"]
-            picture_path = path_utils.generate_resource_path(user_id=user_token, story_id=story_id, resource_type="Photos" resource_name=picture_name)        
-            open(picture_path, "wb").write(picture_bytes).close()
+        # This section allows for further pictures to be added in the future
+        if (jsonData.get("pictures") != None):
+            picture_id_list = []
+            for picture in jsonData["pictures"]:
+                picture_bytes, picture_name = picture["data"], picture["name"]
+                picture_path = path_utils.generate_resource_path(user_id=user_token, story_id=story_id, resource_type="Photos" resource_name=picture_name)        
+                open(picture_path, "wb").write(picture_bytes).close()
 
-            # inserting the picture into the db.
-            picture = dbDAL.insert_picture(picture_path, picture["x"], picture["y"], picture["angle"], picture["size"])
-            picture_id_list.append(picture.id)
+                # inserting the picture into the db.
+                picture = dbDAL.insert_picture(picture_path, picture["x"], picture["y"], picture["angle"], picture["size"])
+                picture_id_list.append(picture.id)
 
         sticker_id_list = []
         for sticker in jsonData["stickers"]:
