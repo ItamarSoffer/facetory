@@ -6,8 +6,10 @@ requirements = [
     "uvicorn",
     "MongoEngine",
     "aiofiles",
-    "os",
-    "struct"
+    # "os",
+    # "struct",
+    "google-oauth2-tool",
+    "google-oauth"
 ]
 
 setuptools.setup(
