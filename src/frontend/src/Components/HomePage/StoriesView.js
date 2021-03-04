@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Row, Col, Divider } from "antd";
+import { Typography, Row, Col, Divider, Button } from "antd";
 
 import SlideCard from '../SlideCard/SliceCard';
 import ThreeDotsMenu from './ThreeDotMenu';
@@ -11,7 +11,9 @@ const homepage_card_style = { "margin": "0px", "width": "100%" };
 const StoriesView = props => (<>
     <Divider orientation="right"><Title level={2}>הסיפורים שלי</Title></Divider>
     <Row justify="end">
-        <a href="#" style={{ padding: "8px" }}>כל הסיפורים</a>
+        <Button type="link">
+            כל הסיפורים
+        </Button>
     </Row>
     <Row gutter={16}>
         {props.stories.map(story => (

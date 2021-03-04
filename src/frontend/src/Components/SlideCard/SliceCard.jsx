@@ -16,7 +16,6 @@ const SlideCard = props => {
               backgroundPosition: 'center center',
 
               position: 'relative',
-              width: '70%',
               content: "",
               display: 'block',
               paddingTop: '50%',

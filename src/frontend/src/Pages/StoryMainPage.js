@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation, useParams, withRouter } from 'react-router-dom';
-import { Image, Layout, Row, Space } from 'antd';
+import { Image, Layout, Row } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import SlideCard from '../Components/SlideCard/SliceCard';
 import {
@@ -9,7 +9,6 @@ import {
 import { getQueryStringParams } from '../Actions/queryStringActions';
 import axios from 'axios';
 import NewSquare from '../Components/NewSquare/NewSqure';
-import { connect } from 'react-redux';
 import { LoadingComponent } from '../Components/LoadingComponent/LoadingComponent';
 
 const { Sider } = Layout;
