@@ -30,3 +30,6 @@ yarn-error.log*
 
 src/frontend/package-lock.json
 package-lock.json
+
+*.pyc
+*.egg-info
