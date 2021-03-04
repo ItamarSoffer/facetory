@@ -49,24 +49,28 @@ def creat_story(user_token: str, story_name: str, child_name: str, gender: str):
 @router.post("/CreateStory", response_class=UJSONResponse)
 def update_story(user_token:str, story_id: int, story_name: str, child_name: str, gender: str):
     try:
-        story = dbDAL.update_story(story_id, story_name, child_name, gender)
+        story = dbDAL.update_story(story_id=story_id, story_name=story_name, child_name=child_name, gender=gender)
 
         # Creating the relevent json to send in the response:
         return {"status": "success",
-                "storyId": story.id})
+                "storyId": story.id}
     except:
         return {"status": "failed",
-                "storyId": -1})
+                "storyId": -1}
+
+@router.post("/CreateStory", response_class=UJSONResponse)
+def delete_story(user_token:str, story_id: int):
+    pass
 
 @router.post("/GetSlides", response_class=UJSONResponse)
 def get_slides(user_token: str, story_id: int):
     try:
-        story_slides = dbDAL.get_slides(story_id)
+        story_slides = dbDAL.get_slides(story_id=story_id)
 
         # Creating the relevent json to send in the response.
         slide_list = []
         for slide in story_slides:
-            response.append("slideName": slide.slide_name,
+            response.append({"slideName": slide.slide_name,
                 "slideId": slide.id,
                 "text": slide.text,
                 "audio_path": slide.audio_path,
@@ -79,7 +83,7 @@ def get_slides(user_token: str, story_id: int):
 @router.post("/GetSlide", response_class=UJSONResponse)
 def get_slide(user_token: str, story_id: int, slide_id: int):
     try:
-        slide = dbDAL.get_slide(slide_id)
+        slide = dbDAL.get_slide(slide_id=slide_id)
         # TODO: JSONIFY on the slide
         response = {"status": "success", "slide": slide}
     except:
@@ -89,7 +93,7 @@ def get_slide(user_token: str, story_id: int, slide_id: int):
 @router.post("/GetStoryThumbnail", response_class=UJSONResponse)
 def get_story_thumbnail(user_token: str, story_id: int):
     try:
-        story = dbDAL.get_story(story_id)
+        story = dbDAL.get_story(story_id=story_id)
 
         # Displaying the thumbnail of the first slide as the story's thumbnail
         first_slide_thumbnail = story.slides[0].thumbnail_path
@@ -102,7 +106,7 @@ def get_story_thumbnail(user_token: str, story_id: int):
 @router.post("/GetSlidesThumbnails", response_class=UJSONResponse)
 def get_slides_thumbnails(user_token: str, story_id: int):
     try:
-        story_slides = dbDAL.get_slides(story_id)
+        story_slides = dbDAL.get_slides(story_id=story_id)
 
         # Creating the relevent json to send in the response:
         thumbnail_list = []
@@ -121,28 +125,28 @@ def save_slide(user_token: str, story_id: str, data: str):
     try:
         jsonData = json.loads(data)
         # TODO get picture from url and save the picture
-        picture_bytes, picture_name = picture_from_url(jsonData["imageUrl"])
-        background_picture_path = path_utils.generate_resource_path(user_id=user_token, story_id=story_id, resource_type="Photos" resource_name=picture_name)        
+        picture_bytes, picture_name = picture_utils.get_picture_data(jsonData["imageUrl"])
+        background_picture_path = path_utils.generate_resource_path(user_id=user_token, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
         open(background_picture_path, "wb").write(picture_bytes).close()
 
         backgroundColor = jsonData["backgroundColor"]
         # saving the background picture
-        picture = dbDAL.insert_picture(background_picture_path,
-            jsonData["imagePosition"]["x"],
-            jsonData["imagePosition"]["y"],
-            jsonData["imageAngle"],
-            jsonData["imageSize"])
+        background_picture = dbDAL.insert_picture(path=background_picture_path,
+            x=jsonData["imagePosition"]["x"],
+            y=jsonData["imagePosition"]["y"],
+            angle=jsonData["imageAngle"],
+            size=jsonData["imageSize"])
 
         # This section allows for further pictures to be added in the future
+        picture_id_list = []
         if (jsonData.get("pictures") != None):
-            picture_id_list = []
             for picture in jsonData["pictures"]:
                 picture_bytes, picture_name = picture["data"], picture["name"]
-                picture_path = path_utils.generate_resource_path(user_id=user_token, story_id=story_id, resource_type="Photos" resource_name=picture_name)        
+                picture_path = path_utils.generate_resource_path(user_id=user_token, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
                 open(picture_path, "wb").write(picture_bytes).close()
 
                 # inserting the picture into the db.
-                picture = dbDAL.insert_picture(picture_path, picture["x"], picture["y"], picture["angle"], picture["size"])
+                picture = dbDAL.insert_picture(path=picture_path, x=picture["x"], y=picture["y"], angle=picture["angle"], size=picture["size"])
                 picture_id_list.append(picture.id)
 
         sticker_id_list = []
@@ -151,16 +155,18 @@ def save_slide(user_token: str, story_id: str, data: str):
             sticker_path = path_utils.generate_sticker_path(sticker_name)
 
             # inserting the sticker data into the db.
-            sticker = dbDAL.insert_picture(sticker_path, sticker["x"], sticker["y"], sticker["angle"], sticker["size"])
+            sticker = dbDAL.insert_picture(path=sticker_path, x=sticker["x"], y=sticker["y"], angle=sticker["angle"], size=sticker["size"])
             sticker_id_list.append(sticker.id)
 
-        slide = dbDAL.insert_slide(background_picture_path, image_position["x"], image_position["y"], image_angle, image_size)
+        slide = dbDAL.insert_slide(path=background_picture_path,
+            background_color=background_color,
+            background_picture_id=background_picture.picture_id,
+            pictures_list=picture_id_list + sticker_id_list)
 
         response = {"status":"success", "slideId": slide.id}
     except:
         response = {"status": "failed"}
     return response
-)
 
 """
 {imageUrl: string,

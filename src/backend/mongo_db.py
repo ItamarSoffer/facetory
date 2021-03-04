@@ -38,12 +38,12 @@ class AppUser(Document):
 
 
 def create_example():
-    pictures = Picture(path='Example.jpg', angle=322, coordinat_x=23, coordinat_y=321)
+    pictures = Picture(path='Example.jpg', angle=322, size=24, coordinate_x=23, coordinate_y=321)
     pictures.save()
     slide = Slide(background_color='#eb34cf', background_picture=pictures, pictures=[pictures], text='hello',
-                  audio='Example.jpg')
+                  audio='Example.jpg', thumbnail='Example.jpg')
     slide.save()
-    story = Story(name='lefasten', child_name='eliana', gender='girl', thumbnail='Example.jpg', slides=[slide])
+    story = Story(name='lefasten', child_name='eliana', gender='girl', slides=[slide])
     story.save()
     app = AppUser(name='eliana', password='pass', stories=[story])
     app.save()
@@ -54,11 +54,7 @@ def create_db():
     db = con.get_database("tell_story")
     # db.create_collection("tell_story")
     create_example()
-
-
-def return_user():
-    print(AppUser.objects(user_id=1).count)
-
+    
 
 if __name__ == '__main__':
     create_db()

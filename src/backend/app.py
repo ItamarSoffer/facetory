@@ -2,12 +2,12 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from DAL.Implementation.facetory_mongo_dal import *
-from Router.Stories import storyApi
+from Router.Stories import story_api
 
 app = FastAPI()
 # Mounting the Resources folder in order to allow access to photos, audio and more.
 app.mount("/Resources", StaticFiles(directory="src/Resources"), "Resources")
-app.include_router(storyApi.router)
+app.include_router(story_api.router)
 
 @app.get('/')
 def home():

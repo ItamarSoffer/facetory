@@ -1,3 +1,4 @@
+import urllib
 from PIL import Image
 from os import path
 
