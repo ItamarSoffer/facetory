@@ -19,7 +19,7 @@ dbDAL = MongoDAL()
 @router.post("/Login", response_class=UJSONResponse)
 def UserLogin(firebase_token:str): # (username:str, password:str):
     try:
-        validated_firebase_obj = auth.verify_if_token(firebase_token ,app=fb_ctx)
+        validated_firebase_obj = auth.verify_id_token(firebase_token ,app=fb_ctx)
         if not validated_firebase_obj:
             raise ValueError    
         # validated_firebase_obj = {}
@@ -84,7 +84,7 @@ def UserLogin(firebase_token:str): # (username:str, password:str):
 def auth_required(func):
     def check_auth(firebase_token, *argv):
         try:
-            validated_firebase_obj = validated_firebase_obj = auth.verify_if_token(firebase_token ,app=fb_ctx)
+            validated_firebase_obj = validated_firebase_obj = auth.verify_id_token(firebase_token ,app=fb_ctx)
             if not validated_firebase_obj: # not userid_in_db(userId):
                 return {
                     "status": "unauthorized"
