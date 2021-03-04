@@ -6,8 +6,7 @@ import {
 import {
     BrowserRouter as Router,
     Switch,
-    Route,
-    Redirect
+    Route
 } from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import HomePage from "../Pages/HomePage";
@@ -15,52 +14,57 @@ import CreateStoryPage from "../Pages/CreateStoryPage";
 import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
 import StoryMainPage from "../Pages/StoryMainPage";
-import {FirebaseAuthConsumer, IfFirebaseAuthed, IfFirebaseUnAuthed} from "@react-firebase/auth";
+import {FirebaseAuthConsumer} from "@react-firebase/auth";
 import firebase from "firebase";
-import {Breadcrumb, Button, Layout, Menu} from "antd";
-import {Header} from "antd/lib/layout/layout";
-import {Content, Footer} from "antd/es/layout/layout";
+import {Menu, Spin} from "antd";
+import {Content} from "antd/es/layout/layout";
 
 
 export default function AppRouter(props) {
-    const [token, setToken] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
     return (
         <Router>
             <Switch>
                 <FirebaseAuthConsumer>
-                    {({isSignedIn, user}) => {
-                        return !isSignedIn ?
-                            <div>
+                    {({isSignedIn, providerId}) => {
+                        if (providerId === null) {
+                            return <Spin size="large" style={{display: "block", marginLeft: "auto", marginRight: "auto", marginTop: "50px"}} />
+                        }
+                        if (isSignedIn) {
+                            return <div>
                                 <Route path="/" component={LoginPage}/>
-                            </div> :
-                            <div>
-                                <div className="logo"/>
-                                <Menu theme="dark" mode="horizontal" selectable={false}>
-                                    <Menu.Item key="logout" onClick={() => {
-                                        firebase.auth().signOut();
-                                    }}>
-                                        <LoginOutlined/>
-                                    </Menu.Item>
-                                    <RedditOutlined style={{float: "left", fontSize: "32px", marginTop: "5px"}}/>
-                                </Menu>
-                                <Content className="site-layout" style={{padding: '0 50px', marginTop: 64}}>
-                                    <div>
-                                        <Route path="/story/:story_id/view" exact={true}
-                                               component={StoryViewerPage}/>
-                                        <Route path="/story/:story_id/editor" exact={true}
-                                               component={SlideEditorPage}/>
-                                        <Route path="/story/:story_id" exact={true} component={StoryMainPage}/>
-                                        <Route path="/create" component={CreateStoryPage}/>
-                                        <Route path="/login" component={LoginPage}/>
-                                        <Route exact path="/" component={HomePage}/>
-                                    </div>
-                                </Content>
-                            </div>
+                            </div>;
+                        }
+                        return <div>
+                            <div className="logo"/>
+                            <Menu theme="dark" mode="horizontal" selectable={false}>
+                                <Menu.Item key="logout" onClick={() => {
+                                    firebase.auth().signOut();
+                                }}>
+                                    <LoginOutlined/>
+                                </Menu.Item>
+                                <RedditOutlined style={{float: "left", fontSize: "32px", marginTop: "5px"}}/>
+                            </Menu>
+                            <Content className="site-layout" style={{padding: '0 50px', marginTop: 64}}>
+                                <div>
+                                    <Route path="/story/:story_id/view" exact={true}
+                                           component={StoryViewerPage}/>
+                                    <Route path="/story/:story_id/editor" exact={true}
+                                           component={SlideEditorPage}/>
+                                    <Route path="/story/:story_id" exact={true} component={StoryMainPage}/>
+                                    <Route path="/create" component={CreateStoryPage}/>
+                                    <Route path="/login" component={LoginPage}/>
+                                    <Route exact path="/" component={HomePage}/>
+                                </div>
+                            </Content>
+                        </div>
+
                     }}
-                        </FirebaseAuthConsumer>
-                        </Switch>
+                </FirebaseAuthConsumer>
 
-                        </Router>
-                        )
+            </Switch>
 
-                    }
+        </Router>
+    )
+
+}
