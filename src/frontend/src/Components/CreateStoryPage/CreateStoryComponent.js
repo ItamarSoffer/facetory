@@ -46,7 +46,7 @@ const validateMessages = {
 
 
 export const CreateStoryForm = ({storyId, setStoryId}) => {
-    const [genderRadioValue, setGenderRadioValue] = useState('girl')
+    const [genderRadioValue, setGenderRadioValue] = useState('boy')
     const onFinish = ({Title, ChildName}) => {
         if (storyId == INVALID_STORY)
         {
@@ -67,14 +67,7 @@ export const CreateStoryForm = ({storyId, setStoryId}) => {
         <div>
         
         <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
-        <Space>
         <Title level={4} style={{textAlign:"left"}}>New Story </Title>
-        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-            <Button type="primary" htmlType="submit">
-              { storyId == INVALID_STORY ?  "Create Story" : "Save Story"}
-            </Button>
-          </Form.Item>
-        </Space>
         
           <Form.Item
             name={['Title']}
@@ -98,18 +91,26 @@ export const CreateStoryForm = ({storyId, setStoryId}) => {
           </Form.Item>
          <Form.Item>
           <Space>Gender:
-         <Radio.Group
-          options={[  { label: 'Girl', value: 'girl' },
-          { label: 'Boy', value: 'boy' },
-        ]}
-          onChange={(item) => {setGenderRadioValue(item.target.value);} }
+         <Radio.Group onChange={(item) => {setGenderRadioValue(item.target.value);} }
           value={genderRadioValue}
           optionType="button"
           buttonStyle="solid"
-        />
+        >
+        <Space>
+        <Radio.Button value="boy" buttonStyle="solid">Boy</Radio.Button>
+        <Radio.Button value="girl" buttonStyle="solid">Girl</Radio.Button>
+        </Space>
+        </Radio.Group>
 
         </Space>
          </Form.Item>
+
+        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 0 }}>
+        <Button type="primary" htmlType="submit">
+            { storyId == INVALID_STORY ?  "Create Story" : "Save Story"}
+        </Button>
+        </Form.Item>
+
         </Form>
         </div>
       );
