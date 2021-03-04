@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from DAL.Implementation.FacetoryMongoDAL import *
+from DAL.Implementation.facetory_mongo_dal import *
 from Router.Stories import storyApi
 
 app = FastAPI()
