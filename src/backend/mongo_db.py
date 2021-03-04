@@ -54,8 +54,7 @@ def create_db():
     db = con.get_database("tell_story")
     # db.create_collection("tell_story")
     create_example()
-    
+
 
 if __name__ == '__main__':
     create_db()
-    return_user()

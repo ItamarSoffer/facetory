@@ -13,12 +13,12 @@ router = APIRouter(
 
 # TODO: Get this from somewhere else.
 dbDAL = MongoDAL()
-# TODO: Translate a user_token to user_id in the DB
+# TODO: Translate a user_uid to user_uid in the DB
 
 @router.post("/GetStories", response_class=UJSONResponse)
-def get_all_stories(user_token: str):
+def get_all_stories(user_uid: str):
     try:
-        all_stories = dbDAL.get_stories(user_id=user_token)
+        all_stories = dbDAL.get_stories(user_uid=user_uid)
 
         # Creating the relevent json to send in the response:
         story_list = []
@@ -35,9 +35,9 @@ def get_all_stories(user_token: str):
     return response
 
 @router.post("/CreateStory", response_class=UJSONResponse)
-def creat_story(user_token: str, story_name: str, child_name: str, gender: str):
+def create_story(user_uid: str, story_name: str, child_name: str, gender: str):
     try:
-        story = dbDAL.insert_story(user_id=user_token, story_name=story_name, child_name=child_name, gender=gender)
+        story = dbDAL.insert_story(user_uid=user_uid, story_name=story_name, child_name=child_name, gender=gender)
 
         # Creating the relevent json to send in the response:
         return {"status": "success",
@@ -47,7 +47,7 @@ def creat_story(user_token: str, story_name: str, child_name: str, gender: str):
                 "storyId": -1}
 
 @router.post("/CreateStory", response_class=UJSONResponse)
-def update_story(user_token:str, story_id: int, story_name: str, child_name: str, gender: str):
+def update_story(user_uid:str, story_id: int, story_name: str, child_name: str, gender: str):
     try:
         story = dbDAL.update_story(story_id=story_id, story_name=story_name, child_name=child_name, gender=gender)
 
@@ -59,11 +59,11 @@ def update_story(user_token:str, story_id: int, story_name: str, child_name: str
                 "storyId": -1}
 
 @router.post("/CreateStory", response_class=UJSONResponse)
-def delete_story(user_token:str, story_id: int):
+def delete_story(user_uid:str, story_id: int):
     pass
 
 @router.post("/GetSlides", response_class=UJSONResponse)
-def get_slides(user_token: str, story_id: int):
+def get_slides(user_uid: str, story_id: int):
     try:
         story_slides = dbDAL.get_slides(story_id=story_id)
 
@@ -81,7 +81,7 @@ def get_slides(user_token: str, story_id: int):
     return response
 
 @router.post("/GetSlide", response_class=UJSONResponse)
-def get_slide(user_token: str, story_id: int, slide_id: int):
+def get_slide(user_uid: str, story_id: int, slide_id: int):
     try:
         slide = dbDAL.get_slide(slide_id=slide_id)
         # TODO: JSONIFY on the slide
@@ -91,9 +91,9 @@ def get_slide(user_token: str, story_id: int, slide_id: int):
     return response
 
 @router.post("/GetStoryThumbnail", response_class=UJSONResponse)
-def get_story_thumbnail(user_token: str, story_id: int):
+def get_story_thumbnail(user_uid: str, story_id: int):
     try:
-        story = dbDAL.get_story(story_id=story_id)
+        story = dbDAL.get_slides(story_id=story_id)
 
         # Displaying the thumbnail of the first slide as the story's thumbnail
         first_slide_thumbnail = story.slides[0].thumbnail_path
@@ -104,7 +104,7 @@ def get_story_thumbnail(user_token: str, story_id: int):
     return response
 
 @router.post("/GetSlidesThumbnails", response_class=UJSONResponse)
-def get_slides_thumbnails(user_token: str, story_id: int):
+def get_slides_thumbnails(user_uid: str, story_id: int):
     try:
         story_slides = dbDAL.get_slides(story_id=story_id)
 
@@ -121,13 +121,14 @@ def get_slides_thumbnails(user_token: str, story_id: int):
     return response
 
 @router.post("/SaveSlide", response_class=UJSONResponse)
-def save_slide(user_token: str, story_id: str, data: str):
+def save_slide(user_uid: str, story_id: str, data: str):
     try:
         jsonData = json.loads(data)
         # TODO get picture from url and save the picture
         picture_bytes, picture_name = picture_utils.get_picture_data(jsonData["imageUrl"])
-        background_picture_path = path_utils.generate_resource_path(user_id=user_token, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
+        background_picture_path = path_utils.generate_resource_path(user_uid=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
         open(background_picture_path, "wb").write(picture_bytes).close()
+        thumbnail_path = picture_utils.create_picture_thumbnail(background_picture_path)
 
         backgroundColor = jsonData["backgroundColor"]
         # saving the background picture
@@ -142,7 +143,7 @@ def save_slide(user_token: str, story_id: str, data: str):
         if (jsonData.get("pictures") != None):
             for picture in jsonData["pictures"]:
                 picture_bytes, picture_name = picture["data"], picture["name"]
-                picture_path = path_utils.generate_resource_path(user_id=user_token, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
+                picture_path = path_utils.generate_resource_path(user_uid=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
                 open(picture_path, "wb").write(picture_bytes).close()
 
                 # inserting the picture into the db.
@@ -158,6 +159,7 @@ def save_slide(user_token: str, story_id: str, data: str):
             sticker = dbDAL.insert_picture(path=sticker_path, x=sticker["x"], y=sticker["y"], angle=sticker["angle"], size=sticker["size"])
             sticker_id_list.append(sticker.id)
 
+        # TODO: pass the thumb nail as well
         slide = dbDAL.insert_slide(path=background_picture_path,
             background_color=background_color,
             background_picture_id=background_picture.picture_id,
@@ -168,6 +170,9 @@ def save_slide(user_token: str, story_id: str, data: str):
         response = {"status": "failed"}
     return response
 
+@router.post("/SaveSlide", response_class=UJSONResponse)
+def delete_slide(user_uid: str, slide_id: int):
+    pass
 """
 {imageUrl: string,
 backgroundColor: string,
