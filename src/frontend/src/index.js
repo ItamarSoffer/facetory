@@ -10,11 +10,17 @@ import store from './store'
 
 
 ReactDOM.render(
+<<<<<<< HEAD
+        <Provider store={store}>
+            <App />
+        </Provider>,
+=======
     // <React.StrictMode>
         <Provider store={store}>
             <App />
         </Provider>,
     // </React.StrictMode>,
+>>>>>>> 3b89579d3f37c83ca8e1de5e63dddbdffdd42597
     document.getElementById('root')
 );
 

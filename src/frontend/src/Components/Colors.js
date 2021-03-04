@@ -18,15 +18,17 @@ const Colors = (props) => {
         '#FFFFFF'
     ])
 
-    return (<div className='colors'>
-        {colors.current.map(color => {
-            return <div
-                style={{ backgroundColor: color }}
-                className={`color-button ${props.currentColor === color&&'current-color'}`}
-                onClick={() => props.setColor(color)}
-            />
-        })}
-    </div>)
+    return (
+        <div className='colors'>
+            {colors.current.map(color => {
+                return <div
+                    style={{ backgroundColor: color, opacity: props.open ? 1 : 0 }}
+                    className={`color-button ${props.currentColor === color && 'current-color'}`}
+                    onClick={() => props.setColor(color)}
+                />
+            })}
+        </div>
+    )
 }
 
 export default Colors;
