@@ -40,6 +40,11 @@
   }
 }
 
+.border-box {
+  // font-family:  -----;
+  box-sizing: border-box;
+}
+
 @keyframes clickEffect {
   0% {
     transform: scale(1);
