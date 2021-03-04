@@ -4,7 +4,8 @@ import setuptools
 requirements = [
     "fastapi",
     "uvicorn",
-    "MongoEngine"
+    "MongoEngine",
+    "aiofiles"
 ]
 
 setuptools.setup(
