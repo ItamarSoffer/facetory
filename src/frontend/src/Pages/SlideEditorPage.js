@@ -39,6 +39,7 @@ export default function SlideEditorPage() {
                     onFinish={onRecorderFinish}
                     onDelete={onRecordDelete}
                 />
+                <button>שמירת השקופית</button>
             </div>
         </div>
     )
