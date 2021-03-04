@@ -58,7 +58,3 @@ def create_db():
 
 if __name__ == '__main__':
     create_db()
-<<<<<<< HEAD
-=======
-
->>>>>>> 79e5af0de1c87422c7a5c6cd6e743501e393b742

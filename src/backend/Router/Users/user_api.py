@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import UJSONResponse
-from src.backend.DAL.Implementation.facetory_mongo_dal import *
+from src.backend.DAL.Implementation.facetory_mongo_dal import MongoDAL
 # from os import urandom
 # from struct import unpack
 # from google.oauth2 import id_token
@@ -13,6 +13,8 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+dbDAL = MongoDAL()
+
 @router.post("/Login", response_class=UJSONResponse)
 def UserLogin(firebase_token:str): # (username:str, password:str):
     try:
@@ -20,10 +22,10 @@ def UserLogin(firebase_token:str): # (username:str, password:str):
         # if not validated_firebase_obj:
         #     raise ValueError    
         validated_firebase_obj = {}
-        validated_firebase_obj['obj'] = firebase_token
+        validated_firebase_obj['sub'] = firebase_token
 
-        if not get_user_by_google_id(validated_firebase_obj['sub']):
-            insert_user(validated_firebase_obj['sub'])
+        if not dbDAL.get_user(validated_firebase_obj['sub']):
+            dbDAL.insert_user(validated_firebase_obj['sub'])
 
         # real_pass = get_password(username) # TODO: see working
         # if not user:
@@ -51,6 +53,7 @@ def UserLogin(firebase_token:str): # (username:str, password:str):
             }
     
     except Exception as e:
+        print(e)
         return {
             'status': 'failed',
             'description': 'Token not authorized.'
