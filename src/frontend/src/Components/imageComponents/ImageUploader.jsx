@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/imageUploader.scss";
+import "../../Styles/imageUploader.scss";
 import { useFiles, FileInput } from "@hilma/fileshandler-client";
 
 const ImageUploader = ({ source, setSource }) => {

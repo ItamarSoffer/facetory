@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../styles/imageSearch.scss";
+import "../../Styles/imageSearch.scss";
 import axios from "axios";
 
 const ImageSearch = (props) => {
