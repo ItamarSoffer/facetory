@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Card, Image } from 'antd';
+import Layout, { Content } from 'antd/lib/layout/layout';
 
 const SlideCard = props => {
     const { imageUrl, cardProps } = props;
@@ -23,7 +24,11 @@ const SlideCard = props => {
 
                 {...cardProps}
             >
-                
+              <Layout >
+                <Content style={{ backgroundColor: 'red', height: '100%'}} >
+
+                </Content>
+              </Layout>
             </Card>
     )
 }
