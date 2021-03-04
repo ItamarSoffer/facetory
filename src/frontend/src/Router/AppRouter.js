@@ -20,7 +20,7 @@ export default function AppRouter(props) {
                     <Switch>
 
                         {
-                            ! props.isLogged ?
+                            ! false ?
 
                                 <div>
                                     <Route path="/" component={LoginPage}/>

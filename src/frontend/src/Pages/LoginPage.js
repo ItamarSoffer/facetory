@@ -7,9 +7,10 @@ import {loginAction} from '../Actions/loginActions';
 import {
     withRouter
 } from "react-router-dom";
+import {IfFirebaseAuthed} from "@react-firebase/auth";
 
 export function LoginPage ({login, isLogged, history}) {
-    
+
     const loginHandler = ({email,password}) => {
         login(email,password);
         if(isLogged === true) {
@@ -21,11 +22,20 @@ export function LoginPage ({login, isLogged, history}) {
             LoginPage
         </div>
     )*/
-    return <LoginForm loginHandler={loginHandler} />
-    
+    return <div>
+        <IfFirebaseAuthed>
+            {({user}) => {
+                console.log('****************');
+                user.getIdToken().then((v)=>{console.log(v)});
+                return <div>You are authenticated</div>;
+            }}
+        </IfFirebaseAuthed>
+        <LoginForm loginHandler={loginHandler} />
+    </div>
+
 }
 
-// when IsLogged is changed, run checkJwt 
+// when IsLogged is changed, run checkJwt
 const mapStateToProps = state => {
     return {
         isLogged: checkJwt(state.usersReducer.jwtToken),
