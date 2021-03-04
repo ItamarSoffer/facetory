@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactMic } from 'react-mic'
 import ClickEffect from '../../generic-components/ClickEffect';
+import Popup from '../general-components/Popup';
 
 const Recorder = ({ onFinish }) => {
 
     const [isRecording, setIsRecording] = useState(false)
     const [recording, setRecording] = useState(null)
     const [isPlaying, setIsPlaying] = useState(null)
+    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false)
 
     const startDate = useRef()
     const keyWordList = useRef([])
@@ -112,7 +114,26 @@ const Recorder = ({ onFinish }) => {
                     </>
                 }
             </div>
-           <div className='delete-recording'> מחק הקלטה</div>
+            {recording ? <div onClick={()=>{setIsDeletePopupOpen(true)}} className='delete-recording'> מחק הקלטה</div> : <div className='delete-recording' ></div>}
+
+            <Popup
+                onClose={() => { setIsDeletePopupOpen(false) }}
+                isShowing={isDeletePopupOpen}
+            >
+                <h2>
+                    האם אתה בטוח שברצונך למחוק את ההקלטה?
+                </h2>
+                <div className='delete-recording-popup-buttons'>
+                    <div onClick={()=>{setIsDeletePopupOpen(false)}}>ביטול</div>
+                    <div onClick={()=>{
+                        audio.current.pause()
+                        setIsDeletePopupOpen(false)
+                        setIsPlaying(false)
+                        setRecording(null)
+                        audio.current = null
+                    }}>אישור</div>
+                </div>
+           </Popup>
         </div>
     );
 };
