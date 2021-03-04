@@ -1,0 +1,6 @@
+setup.py
+factory_server.egg-info/PKG-INFO
+factory_server.egg-info/SOURCES.txt
+factory_server.egg-info/dependency_links.txt
+factory_server.egg-info/requires.txt
+factory_server.egg-info/top_level.txt
