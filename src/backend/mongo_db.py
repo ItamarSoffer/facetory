@@ -7,8 +7,9 @@ class Picture(Document):
     picture_id = ObjectIdField()
     path = StringField(required=True)
     angle = IntField(required=True)
-    coordinat_x = IntField(required=True)
-    coordinat_y = IntField(required=True)
+    size = IntField(required=True)
+    coordinate_x = IntField(required=True)
+    coordinate_y = IntField(required=True)
 
 
 class Slide(Document):
