@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation, useParams, withRouter } from 'react-router-dom';
-import { Image, Layout, Row } from 'antd';
+import { Image, Layout, Row, Space } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import SlideCard from '../Components/SlideCard/SliceCard';
 import {
@@ -8,6 +8,9 @@ import {
   } from '@ant-design/icons';
 import { getQueryStringParams } from '../Actions/queryStringActions';
 import axios from 'axios';
+import NewSquare from '../Components/NewSquare/NewSqure';
+import { connect } from 'react-redux';
+import { LoadingComponent } from '../Components/LoadingComponent/LoadingComponent';
 
 const { Sider } = Layout;
 
@@ -29,16 +32,22 @@ const StoryMainPage = withRouter((props) => {
     const { storyId } = useParams();
 
     const [slides, setSlides] = useState([]);
+    const [isLoading, setLoading] = useState(true);
+
     const currentId = query.slideId;
-    useEffect(() => {
+    useEffect(async () => {
+        setLoading(true);
         axios.post(`http://localhost:1337/GetSlides/${storyId}`, {storyId, userId:123}).then(res => {
             setSlides(res.data.slides);
-        }).catch(err => console.log(err))
+            setLoading(false)
+        }).catch( err => console.log(err));
     }, [storyId]);
 
     const currentImageUrl = slides[currentId] ? slides[currentId].picture : 0;
     return (
-        <Layout>
+        isLoading
+        ? <LoadingComponent/>
+        : <Layout>
             <Sider
             style={{
                 height: '100vh',
@@ -60,6 +69,10 @@ const StoryMainPage = withRouter((props) => {
                         </Row>
                     ))
                 }
+                <div style={{height: '7px'}}/>
+                <Row justify='center'>
+                    <NewSquare style={{marginTop: '10px'}} onClick={() => console.log('newSlide')}/>
+                </Row>
             </Sider>
             <Content>
                 <div>
@@ -70,4 +83,4 @@ const StoryMainPage = withRouter((props) => {
     )}
 );
 
-export default (StoryMainPage);
+export default StoryMainPage;
