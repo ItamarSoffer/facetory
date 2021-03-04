@@ -74,21 +74,10 @@ class MongoDAL(FacetoryDAL):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             return Picture.objects.get(picture_id=picture_id)
 
-    def insert_user(self, username: str, password: str):
+    def insert_user(self, google_id: str, username: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            return AppUser(username=username, password=password).save()
+            return AppUser(google_id=google_id, username=username).save()
 
-    def get_user(self, username: str):
+    def get_user(self, google_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            return AppUser.objects.get(username=username)
-
-    def update_password(self, user_id: int, password: str):
-        with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            user = AppUser.objects.get(user_id=user_id)
-            user.update(password=password)
-            user.save()
-        return user
-
-    def get_password(self, username: str):
-        with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            return AppUser.objects.get(username=username).password
+            return AppUser.objects.get(google_id=google_id)
