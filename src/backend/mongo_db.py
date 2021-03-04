@@ -17,6 +17,7 @@ class Slide(Document):
     background_color = StringField(required=True, max_length=50)
     background_picture = ReferenceField(Picture)
     pictures = ListField(ReferenceField(Picture))
+    thumbnail = StringField(required=True)
     text = StringField(required=True)
     audio = StringField(required=True)
 
@@ -26,7 +27,6 @@ class Story(Document):
     name = StringField(required=True, max_length=50)
     child_name = StringField(required=True, max_length=50)
     gender = StringField(required=True)
-    thumbnail = StringField(required=True)
     slides = ListField(ReferenceField(Slide))
 
 
