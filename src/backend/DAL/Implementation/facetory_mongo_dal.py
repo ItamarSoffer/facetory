@@ -76,7 +76,7 @@ class MongoDAL(FacetoryDAL):
 
     def insert_user(self, google_id: str, username: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            return AppUser(google_id=google_id, username=username).save()
+            return AppUser(google_id=google_id, name=username).save()
 
     def get_user(self, google_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
