@@ -6,6 +6,7 @@ import { AudioOutlined } from '@ant-design/icons';
 import {INVALID_STORY} from "../../api_consts"
 import { apiCreateStory } from '../../API/CreateStoryAPI';
 import {Card, Radio, Tooltip, Typography, Space, Form, Input, Button} from 'antd';
+import {setCurrentStoryAction} from '../../Actions/editStoryAction'
 const { Title } = Typography;
 
 const layout = {
@@ -44,13 +45,19 @@ const validateMessages = {
 // This function is used for both edit and create story - in edit i receive a valid story id and null setStoryId
 // in create i receive a valid storyId and setStoryId which i create with useState in CreateStoryPage
 
-export const CreateStoryForm = ({history}) => {
-  const createStoryHandler = ({Title, ChildName, gender}) => {
-    console.log("finished create story form")
+export const CreateStoryForm = (props) => {
+    const {history, setCurrentStoryHandler} = props;
+    const createStoryHandler = (values) => {
+        var {Title, ChildName, gender} = values;
     const userToekn = window.localStorage.getItem('jwtToken');
-    console.log("gender is: ", gender)
+    if (gender == undefined) 
+    {
+        // fix bug where default seleciton is not passed in values
+        gender = 'boy'
+    }
     apiCreateStory(userToekn, Title, ChildName, gender, (storyId) => {
         // redirect to story editor!!
+        setCurrentStoryHandler({storyId, storyName : Title, ChildName, gender})
         history.push({pathname: `/story/${storyId}/`, })
     });
   };
@@ -83,10 +90,11 @@ export const GenericCardWrapper = props => {
         </div>
         )
 }
-export const ChangeStoryForm = ({formButtonName, formSubmitHandler}) =>
+export const ChangeStoryForm = (props) =>
 {
-    const [genderRadioValue, setGenderRadioValue] = useState('boy')
- 
+    const {formButtonName, formSubmitHandler, storyData = {storyName : '', ChildName : '', gender : 'boy'}} = props
+    const [genderRadioValue, setGenderRadioValue] = useState(storyData.gender)
+    console.log("got story data in change story form: ", storyData)
       return (
         <div>
         
@@ -95,22 +103,14 @@ export const ChangeStoryForm = ({formButtonName, formSubmitHandler}) =>
         
           <Form.Item
             name={['Title']}
-            rules={[
-              {
-              },
-            ]}
           >
-            <Input placeholder="שם הסיפור"/>
+            <Input placeholder="שם הסיפור" defaultValue={storyData.storyName}/>
             
           </Form.Item>
           <Form.Item
             name={['ChildName']}
-            rules={[
-              {
-              },
-            ]}
           >
-            <Input placeholder="שם הילד" suffix={AudioSuffix} />
+            <Input placeholder="שם הילד" defaultValue={storyData.ChildName} suffix={AudioSuffix} />
 
           </Form.Item>
          <Form.Item

@@ -4,17 +4,19 @@ import 'antd/dist/antd.css';
 import { AudioOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import {fallback_img, INVALID_STORY} from "../../api_consts"
 import {ChangeStoryForm} from "../CreateStoryPage/CreateStoryComponent"
-import { apiUpdateStory } from '../../API/CreateStoryAPI';
-import {Typography, Space, Button, Image} from 'antd';
+import { apiUpdateStory, apiGetStory } from '../../API/EditStoryAPI';
+import {message, Typography, Space, Button, Image} from 'antd';
 
 const { Title } = Typography;
-export const EditStoryForm = ({storyId}) => {
+export const EditStoryForm = (props) => {
     const EditStoryHandler = ({Title, ChildName, gender}) => {
         console.log("finished update story form")
         const userToekn = window.localStorage.getItem('jwtToken');
-        apiUpdateStory(userToekn, storyId, Title, ChildName, gender); 
+        apiUpdateStory(userToekn, props.storyId, Title, ChildName, gender); 
     };
-    return <ChangeStoryForm formButtonName="Save Story" formSubmitHandler={EditStoryHandler}/>
+  
+  console.log("story props: ", props)
+  return <ChangeStoryForm formButtonName="Save Story" formSubmitHandler={EditStoryHandler} storyData={props.currentStory}/>
   };
 
 /* slides example
@@ -42,7 +44,7 @@ const Slide = ({slideName, imgPath}) =>
     return (
     <Space align='center' direction="vertical">
         <Image width={100} src={img_url} fallback={fallback_img}/>
-        <text> {slideName} </text>
+        {slideName}
     </Space>
      );
 }
@@ -67,13 +69,13 @@ export const AllSlidesView = ({Slides, AddSlideHandler}) => {
         <Title level={4} style={{textAlign:"left"}}>All Slides</Title>
         <Space>
         {Slides.map(s => 
-        <Slide slideName={s.slideName} imgPath={s.picture}/>)
+        <Slide key={s.slideId} slideName={s.slideName} imgPath={s.picture}/>)
         }
         
         <Space align='center' direction="vertical">
             <Button type="dashed" size="large"  icon = {<PlusSquareOutlined/>} onClick={AddSlideHandler} style={{height : "100px", width : "100px"}}>
             </Button>
-            <text>Add Slide</text>
+            Add Slide
         </Space>
         </Space>
         </div>
