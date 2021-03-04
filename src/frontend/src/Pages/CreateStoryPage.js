@@ -41,8 +41,7 @@ const layout = {
     const AddNewSlide = () =>
     {
         console.log("added new slide")
-        const story_id = 1
-        props.history.push({pathname: `/story/:story_id/editor`,})
+        props.history.push({pathname: `/story/${storyId}/editor`, })
     }
 
    return (

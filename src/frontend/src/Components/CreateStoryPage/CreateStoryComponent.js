@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import { AudioOutlined, PlusSquareOutlined } from '@ant-design/icons';
@@ -9,7 +9,7 @@ import {fallback_img} from "../../api"
 
 
 //import './index.css';
-import {Tooltip, Typography, Space, Form, Input, Button, Image} from 'antd';
+import {Radio, Tooltip, Typography, Space, Form, Input, Button, Image} from 'antd';
 const { Title } = Typography;
 
 const layout = {
@@ -46,12 +46,13 @@ const validateMessages = {
 
 
 export const CreateStoryForm = ({isInitialized, setIsInitialized, storyId, setStoryId}) => {
+    const [genderRadioValue, setGenderRadioValue] = useState('girl')
     const onFinish = ({Title, ChildName}) => {
         if (!isInitialized)
         {
             console.log("finished create story form")
             const userToekn = window.localStorage.getItem('jwtToken');
-            apiCreateStory(userToekn, Title, ChildName, (storyId) => {
+            apiCreateStory(userToekn, Title, ChildName, genderRadioValue, (storyId) => {
                 setIsInitialized(true); 
                 setStoryId(storyId);
             });
@@ -74,29 +75,41 @@ export const CreateStoryForm = ({isInitialized, setIsInitialized, storyId, setSt
             </Button>
           </Form.Item>
         </Space>
+        
           <Form.Item
             name={['Title']}
-            label="Name"
             rules={[
               {
               },
             ]}
           >
-            <Input />
+            <Input placeholder="שם הסיפור"/>
             
           </Form.Item>
           <Form.Item
             name={['ChildName']}
-            label="Child Name"
             rules={[
               {
               },
             ]}
           >
-            <Input suffix={AudioSuffix} />
+            <Input placeholder="שם הילד" suffix={AudioSuffix} />
 
           </Form.Item>
-         
+         <Form.Item>
+          <Space>Gender:
+         <Radio.Group
+          options={[  { label: 'Girl', value: 'girl' },
+          { label: 'Boy', value: 'boy' },
+        ]}
+          onChange={(item) => {setGenderRadioValue(item.target.value);} }
+          value={genderRadioValue}
+          optionType="button"
+          buttonStyle="solid"
+        />
+
+        </Space>
+         </Form.Item>
         </Form>
         </div>
       );
