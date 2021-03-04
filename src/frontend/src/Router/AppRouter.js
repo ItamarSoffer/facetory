@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import HomePage from "../Pages/HomePage";
-import CreateStoryPage from "../Pages/CreateStoryPage";
+import CreateStoryPage, {EditStoryCard} from "../Pages/CreateStoryPage";
 import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
 import StoryMainPage from "../Pages/StoryMainPage";
@@ -35,6 +35,7 @@ export default function AppRouter(props) {
                                     <Route path="/story/:story_id"  exact={true} component={StoryMainPage}/>
 
                                     <Route path="/create" component={CreateStoryPage}/>
+                                    {/* <Route path="/edit" component={EditStoryCard}/> */}
 
                                     {/* <Route path="/login" component={LoginPage}/> */}
 

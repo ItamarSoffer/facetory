@@ -1,6 +1,6 @@
 import {message} from "antd";
 import axios from 'axios';
-import {backendAPI} from "../api";
+import {backendAPI} from "../api_consts";
 
 export const apiCreateStory = (userJwt, storyName, childName, gender, onReceive) => {
     const saveStoryApi = backendAPI.concat(`/CreateStory`);

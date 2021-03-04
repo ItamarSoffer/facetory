@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import { AudioOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import { apiCreateStory, apiUpdateStory } from '../../API/CreateStoryAPI';
-import {fallback_img} from "../../api"
+import {fallback_img, INVALID_STORY} from "../../api_consts"
 
 
 
@@ -45,15 +45,14 @@ const validateMessages = {
   /* eslint-enable no-template-curly-in-string */
 
 
-export const CreateStoryForm = ({isInitialized, setIsInitialized, storyId, setStoryId}) => {
+export const CreateStoryForm = ({storyId, setStoryId}) => {
     const [genderRadioValue, setGenderRadioValue] = useState('girl')
     const onFinish = ({Title, ChildName}) => {
-        if (!isInitialized)
+        if (storyId == INVALID_STORY)
         {
             console.log("finished create story form")
             const userToekn = window.localStorage.getItem('jwtToken');
             apiCreateStory(userToekn, Title, ChildName, genderRadioValue, (storyId) => {
-                setIsInitialized(true); 
                 setStoryId(storyId);
             });
         }else
@@ -71,7 +70,7 @@ export const CreateStoryForm = ({isInitialized, setIsInitialized, storyId, setSt
         <Title level={4} style={{textAlign:"left"}}>New Story </Title>
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button type="primary" htmlType="submit">
-              {isInitialized ? "Save Story" : "Create Story"}
+              { storyId == INVALID_STORY ?  "Create Story" : "Save Story"}
             </Button>
           </Form.Item>
         </Space>
@@ -168,7 +167,7 @@ export const AllSlidesView = ({Slides, AddSlideHandler}) => {
         }
         
         <Space align='center' direction="vertical">
-        <Button type="dashed" size="large"  icon = {<PlusSquareOutlined/>} onClick={AddSlideHandler} style={{height : "100px", width : "100px"}}>
+            <Button type="dashed" size="large"  icon = {<PlusSquareOutlined/>} onClick={AddSlideHandler} style={{height : "100px", width : "100px"}}>
             </Button>
             <text>Add Slide</text>
         </Space>
