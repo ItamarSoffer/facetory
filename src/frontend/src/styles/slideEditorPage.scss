@@ -1,0 +1,11 @@
+.slide-canvas-wrapper {
+  width: 50vw;
+  height: 60vh;
+  margin: auto;
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: relative;
+  & > * {
+    position: absolute;
+  }
+}
