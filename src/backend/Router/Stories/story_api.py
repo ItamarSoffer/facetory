@@ -25,7 +25,7 @@ def get_all_stories(user_uid: str):
         # Creating the relevent json to send in the response:
         story_list = []
         for story in all_stories:
-            response.append({"storyName": story.name,
+            story_list.append({"storyName": story.name,
                 "storyId": str(story.id),
                 "childName": story.child_name,
                 "gender": story.gender,
@@ -72,13 +72,15 @@ def delete_story(user_uid:str, story_id: str):
 def get_slides(user_uid: str, story_id: str):
     try:
         story_slides = dbDAL.get_slides(story_id=story_id)
-        # Creating the relevent json to send in the response.
+        # Creating the relevant json to send in the response.
         slide_list = []
         for slide in story_slides:
-            json_slide = json.loads(slide.to_json())
-            # super hacky code:
-            json_slide["id"] = json_slide["_id"]["$oid"]
-            slide_list.append(json_slide)
+            slide_list.append({"slideId": slide.id,
+                "background_color": slide.background_color,
+                "background_picture": slide.background_picture,
+                "text": slide.text,
+                "audio_path": slide.audio,
+                "picture": slide.pictures})
             print(slide_list)
         response = {"status": "success", "slides": slide_list}
     except Exception as e:

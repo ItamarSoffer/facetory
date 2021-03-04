@@ -40,7 +40,7 @@ class MongoDAL(FacetoryDAL):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             return AppUser.objects.get(google_id=user_id).stories
 
-    def insert_slide(self, story_id: str, background_color: str, background_picture_id: str, pictures_list: list[int],
+    def insert_slide(self, story_id: str, background_color: str, background_picture_id: str, pictures_list: list,
                      thumbnail_path: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             background_pic = Picture.objects.get(id=background_picture_id)
@@ -60,9 +60,7 @@ class MongoDAL(FacetoryDAL):
 
     def get_slides(self, story_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            s = Story.objects.get(id=story_id).slides
-            print(s[0].text)
-            return s
+            return Story.objects.get(id=story_id).slides
 
     def insert_picture(self, path: str, x: float, y: float, angle: float, size: float):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
