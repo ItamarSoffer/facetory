@@ -27,7 +27,7 @@ class MongoDAL(FacetoryDAL):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             story = Story.objects.get(story_id=story_id)
             story.story_name = story_name
-            story.update(story_name=story_name, child_name=child_name, gender=gender)
+            story.modify(story_name=story_name, child_name=child_name, gender=gender)
             story.save()
         return story
 
