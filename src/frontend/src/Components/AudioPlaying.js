@@ -37,11 +37,8 @@ const AudioPlaying = () => {
     }
 
     const handleNextMention = () => {
-
-        console.log('handling mention', audio1.current.currentTime);
         const nextMention = nameMentions.find(m => m.startTime >= audio1.current.currentTime)
-        console.log(nextMention);
-
+            
         if (nextMention) {
             const timeout = (nextMention.startTime - audio1.current.currentTime) * 1000;
             nameTimeout.current = setTimeout(() => {
@@ -53,23 +50,18 @@ const AudioPlaying = () => {
     }
 
     const handlePlayButton = () => {
-        console.log(`handling play button with ${lastPlayed.current}`);
         //first we check if one of them is playing
         if (!audio1.current.paused) {
-            console.log('pausing 1');
             audio1.current.pause();
             lastPlayed.current = 1;
             clearTimeout(nameTimeout.current);
         } else if (!audio2.current.paused) {
-            console.log('pausing 2');
             audio2.current.pause();
             lastPlayed.current = 2;
         } else if (lastPlayed.current === 1) {
-            console.log('playing 1');
             lastPlayed.current = null;
             audio1.current.play();
         } else if (lastPlayed.current === 2) {
-            console.log('playing 2');
             lastPlayed.current = null;
             audio2.current.play();
         }

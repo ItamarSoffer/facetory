@@ -18,10 +18,10 @@ const CanvasImage = (props) => {
       offsetY={img ? img.height / 2 : 0}
       draggable
       onDragStart={(e) => {
-        console.log("started dragging!!");
+        // console.log("started dragging!!");
       }}
       onDragEnd={() => {
-        console.log("ended drag!");
+        // console.log("ended drag!");
       }}
     />
   );

@@ -38,11 +38,11 @@
             }
         }
 
-        .sile-tool-bar {
+        .slide-tool-bar {
             display: flex;
             margin: 2vh 0 5vh;
 
-            div {
+            .tool-bar-icon {
                 &:first-child {
                     margin-left: 20px;
                 }
@@ -59,6 +59,10 @@
                     height: 3.5vh;
                     width: 3.5vh;
                 }
+            }
+
+            u {
+                color: #4B7CFF;
             }
         }
 

@@ -1,13 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Canvas from "../Components/Canvas";
-import { Form, Input, Button, Card, Typography } from 'antd';
 
 //COMPONENTS
 import Colors from '../Components/Colors'
 import Recorder from '../Components/Recorder/Recorder';
-
-const { Title } = Typography;
-
 
 //HARD-CODED
 const slide =
@@ -75,7 +71,6 @@ export default function SlideEditorPage() {
     const [backgroundImageAngle, setBackgroundImageAngle] = useState(slide.canvas.imageAngle);
     const [backgroundImageSize, setBackgroundImageSize] = useState(slide.canvas.imageSize);
     const [stickers, setstickers] = useState(slide.canvas.stickers);
-
     const [colorsOpen, setColorsOpen] = useState(false);
     const [stickersOpen, setStickersOpen] = useState(false);
 
@@ -98,32 +93,36 @@ export default function SlideEditorPage() {
         setStickersOpen(!stickersOpen);
     }
 
-
     return (
         <div className='slide-editor-page'>
             <div>
                 <div>
                     <div className='title'>שקופית חדשה</div>
-                    {false ? <div className='upload-image-conteiner'>
-                        <div>
-                            <img src='/my-icons/default-image.svg' />
-                            <div>העלאת תמונה</div>
-                        </div>
-                    </div> : <Canvas
+                    {!backgroundImageSrc ?
+                        <div className='upload-image-conteiner'>
+                            <div>
+                                <img src='/my-icons/default-image.svg' />
+                                <div>העלאת תמונה</div>
+                            </div>
+                        </div> :
+                        <Canvas
                             backgroundImageSrc={backgroundImageSrc}
                             backgroundImagePosition={backgroundImagePosition}
                             backgroundImageAngle={backgroundImageAngle}
                             backgroundImageSize={backgroundImageSize}
                             backgroundColor={color}
                             stickers={stickers}
-                        />}
-                    <div className='sile-tool-bar'>
+                        />
+                    }
+                    <div className='slide-tool-bar'>
                         <div
+                            className='tool-bar-icon'
                             onClick={toggleStickers}
                         >
                             <img src='/my-icons/smiley.svg' />
                         </div>
                         <div
+                            className='tool-bar-icon'
                             onClick={toggleColors}
                         >
                             <img src='/my-icons/color-fill.svg' />

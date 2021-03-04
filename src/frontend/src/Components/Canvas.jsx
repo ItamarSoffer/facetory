@@ -34,10 +34,6 @@ const Canvas = (props) => {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    console.log("props.stickers", props.stickers);
-  }, []);
-
-  useEffect(() => {
     if (wrapperRef.current) {
       setWidth(wrapperRef.current.offsetWidth);
       setHeight(wrapperRef.current.offsetHeight);
