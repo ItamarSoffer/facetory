@@ -120,3 +120,7 @@ def GetSlidesThumbnails(user_token: str, story_id: int):
          response = {"status": "failed", "thumbnail": ""}   
     }
     return response
+
+@router.post("/SaveSlide", response_class=UJSONResponse)
+def SaveSlide(user_token: str):
+    pass
