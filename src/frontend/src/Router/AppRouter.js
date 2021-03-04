@@ -36,7 +36,7 @@ export default function AppRouter(props) {
 
                                     <Route path="/create" component={CreateStoryPage}/>
 
-                                    <Route path="/login" component={LoginPage}/>
+                                    {/* <Route path="/login" component={LoginPage}/> */}
 
                                     <Route exact path="/" component={HomePage}/>
 
