@@ -6,7 +6,7 @@ import 'antd/dist/antd.css';
 import { checkJwt } from "./Actions/jwtActions";
 import { connect } from 'react-redux';
 import { ConfigProvider } from 'antd';
-
+import './Styles/index'
 
 function App(props) {
   return (

@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { ReactMic } from 'react-mic'
 import ClickEffect from '../../generic-components/ClickEffect';
-import './recorder.scss'
 
 const Recorder = ({ onFinish }) => {
 
