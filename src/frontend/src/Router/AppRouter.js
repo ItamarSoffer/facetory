@@ -11,6 +11,7 @@ import CreateStoryPage from "../Pages/CreateStoryPage";
 import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
 import StoryMainPage from "../Pages/StoryMainPage";
+import ImagePopup from '../Components/imageComponents/ImagePopup';
 
 
 export default function AppRouter(props) {
@@ -37,6 +38,8 @@ export default function AppRouter(props) {
                                     <Route path="/create" component={CreateStoryPage}/>
 
                                     <Route path="/login" component={LoginPage}/>
+
+                                    <Route path='/image-popup' component={ImagePopup} />
 
                                     <Route exact path="/" component={HomePage}/>
 
