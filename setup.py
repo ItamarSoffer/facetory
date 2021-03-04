@@ -8,8 +8,7 @@ requirements = [
     "aiofiles",
     "ujson",
     "Pillow",
-    "google-oauth2-tool",
-    "google-oauth"
+    "firebase_admin"
 ]
 
 setuptools.setup(
