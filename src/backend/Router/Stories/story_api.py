@@ -120,25 +120,37 @@ def get_slides_thumbnails(user_token: str, story_id: int):
 def save_slide(user_token: str, story_id: str, data: str):
     try:
         jsonData = json.loads(data)
-        # TODO get picture from url:
+        # TODO get picture from url and save the picture
         picture_bytes, picture_name = picture_from_url(jsonData["imageUrl"])
-        # TODO: save pictureBytes
         background_picture_path = path_utils.generate_resource_path(user_id=user_token, story_id=story_id, resource_type="Photos" resource_name=picture_name)        
         open(background_picture_path, "wb").write(picture_bytes).close()
-        backgroundColor = jsonData["backgroundColor"]
-        image_position = jsonData["imagePosition"]
-        image_angle = jsonData["imageAngle"]
-        image_size = jsonData["imageSize"]
 
+        backgroundColor = jsonData["backgroundColor"]
+        # saving the background picture
+        picture = dbDAL.insert_picture(background_picture_path,
+            jsonData["imagePosition"]["x"],
+            jsonData["imagePosition"]["y"],
+            jsonData["imageAngle"],
+            jsonData["imageSize"])
+
+        picture_id_list = []
         for picture in jsonData["pictures"]:
             picture_bytes, picture_name = picture["data"], picture["name"]
             picture_path = path_utils.generate_resource_path(user_id=user_token, story_id=story_id, resource_type="Photos" resource_name=picture_name)        
             open(picture_path, "wb").write(picture_bytes).close()
-            dbDAL.insert_picture(picture_path, picture["x"], picture["y"], picture["angle"], picture["size"])
 
+            # inserting the picture into the db.
+            picture = dbDAL.insert_picture(picture_path, picture["x"], picture["y"], picture["angle"], picture["size"])
+            picture_id_list.append(picture.id)
+
+        sticker_id_list = []
         for sticker in jsonData["stickers"]:
-            # TODO: Create picture in FS
-            continue
+            sticker_name = sticker["name"]
+            sticker_path = path_utils.generate_sticker_path(sticker_name)
+
+            # inserting the sticker data into the db.
+            sticker = dbDAL.insert_picture(sticker_path, sticker["x"], sticker["y"], sticker["angle"], sticker["size"])
+            sticker_id_list.append(sticker.id)
 
         slide = dbDAL.insert_slide(background_picture_path, image_position["x"], image_position["y"], image_angle, image_size)
 
