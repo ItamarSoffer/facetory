@@ -3,13 +3,13 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Redirect
 } from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import HomePage from "../Pages/HomePage";
-import CreateStoryPage from "../Pages/CreateStoryPage";
+import CreateStoryPage, {EditStoryCard} from "../Pages/CreateStoryPage";
 import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
+import EditStoryPage from "../Pages/EditStoryPage";
 import StoryMainPage from "../Pages/StoryMainPage";
 import ImagePopup from '../Components/imageComponents/ImagePopup';
 
@@ -33,11 +33,14 @@ export default function AppRouter(props) {
 
                             <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage} />
 
-                            <Route path="/story/:story_id" exact={true} component={StoryMainPage} />
+                             <Route path="/story/:storyId"  exact={true} component={EditStoryPage}/>
+                                    
+                             <Route path="/story/:storyId/main"  exact={true} component={StoryMainPage}/>
 
-                            <Route path="/create" component={CreateStoryPage} />
+                             <Route path="/create" component={CreateStoryPage}/>
+                             {/* <Route path="/edit" component={EditStoryCard}/> */}
 
-                            <Route path="/login" component={LoginPage} />
+                             {/* <Route path="/login" component={LoginPage}/> */}
 
                             <Route path='/image-popup' component={ImagePopup} />
 
