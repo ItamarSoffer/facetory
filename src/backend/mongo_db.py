@@ -32,8 +32,8 @@ class Story(Document):
 
 class AppUser(Document):
     user_id = ObjectIdField()
+    google_id = StringField()
     name = StringField(max_length=50, unique=True)
-    password = StringField(max_length=50)
     stories = ListField(ReferenceField(Story))
 
 
@@ -45,16 +45,20 @@ def create_example():
     slide.save()
     story = Story(name='lefasten', child_name='eliana', gender='girl', slides=[slide])
     story.save()
-    app = AppUser(name='eliana', password='pass', stories=[story])
+    app = AppUser(google_id='1231', name='eliana', stories=[story])
     app.save()
 
 
 def create_db():
     con = connect("tell_story")
     db = con.get_database("tell_story")
-    # db.create_collection("tell_story")
+    db.create_collection("tell_story")
     create_example()
 
 
 if __name__ == '__main__':
     create_db()
+<<<<<<< HEAD
+=======
+
+>>>>>>> 79e5af0de1c87422c7a5c6cd6e743501e393b742
