@@ -9,6 +9,7 @@ export const LoginForm = ({loginHandler}) => {
     const onFinish = (values) => {
       
       console.log('Received values of form: ', values);
+      if( values.username == "barkai")
       return loginHandler(values.username, values.password)
     };
   

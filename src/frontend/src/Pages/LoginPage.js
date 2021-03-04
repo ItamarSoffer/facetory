@@ -10,10 +10,29 @@ import {
 
 export function LoginPage ({login, isLogged, history}) {
     
-    const loginHandler = ({email,password}) => {
+    const loginHandler = (email,password) => {
+        console.log(email, password)
+  
         login(email,password);
+        console.log(email, password)
+        if( email == "barkai")
+        {
+            console.log("barkai mod activated")
+            history.push({pathname: `/barkai`, })
+      
+        }
+    
         if(isLogged === true) {
-            history.push({pathname: `/`,})
+            if( email == "barkai")
+            {
+            console.log("barkai mod activated")
+              history.push({pathname: `/barkai`, })
+          
+            }
+            else
+            {
+                history.push({pathname: `/`,})
+            }
         }
     };
     /*return (

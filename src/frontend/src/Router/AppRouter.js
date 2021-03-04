@@ -11,7 +11,7 @@ import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
 import EditStoryPage from "../Pages/EditStoryPage";
 import StoryMainPage from "../Pages/StoryMainPage";
-
+import BarkaiPage from "../Pages/BarkaiPage";
 
 export default function AppRouter(props) {
 
@@ -37,6 +37,8 @@ export default function AppRouter(props) {
                                     <Route path="/story/:storyId/main"  exact={true} component={StoryMainPage}/>
 
                                     <Route path="/create" component={CreateStoryPage}/>
+                                    <Route path="/barkai" component={BarkaiPage}/>
+
                                     {/* <Route path="/edit" component={EditStoryCard}/> */}
 
                                     {/* <Route path="/login" component={LoginPage}/> */}
