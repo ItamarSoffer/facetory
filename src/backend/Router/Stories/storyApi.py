@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from ....backend.DAL.Implementation.FacetoryMongoDAL import *
+from src.backend.DAL.FacetoryDAL import FacetoryDAL
 
 router = APIRouter(
     prefix="/Story",

@@ -9,7 +9,7 @@ requirements = [
 ]
 
 setuptools.setup(
-    name="factory_server",
+    name="facetory",
     version="1.0",
     license="MIT",
     author="kks",
