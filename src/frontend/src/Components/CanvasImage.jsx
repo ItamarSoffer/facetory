@@ -16,6 +16,7 @@ const CanvasImage = (props) => {
     //   height={props.size}
       offsetX={img ? img.width / 2 : 0}
       offsetY={img ? img.height / 2 : 0}
+      width={props.size}
       draggable
       onDragStart={(e) => {
         console.log("started dragging!!");
