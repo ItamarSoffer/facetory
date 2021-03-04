@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {Router, useHistory, withRouter} from 'react-router-dom';
+import axios from 'axios';
 import {LoadingComponent} from "../Components/LoadingComponent/LoadingComponent";
 
 import ReactDOM from "react-dom";
@@ -13,13 +15,6 @@ import ReactPlayer from 'react-player'
 const {Title, Text} = Typography;
 
 const style = { padding: "0px" };
-
-// class HomePageCard extends SlideCard{
-//     constructor(cardProps){
-//         super(cardProps);
-        
-//     }
-// }
 
 function handleButtonClick(e) {
     //message.info('Click on left button.');
@@ -60,7 +55,6 @@ const menu = (
 const homepage_style = {"padding": "20px", direction:"rtl"};
 const homepage_card_style = {"margin": "0px", "width": "100%"};
 //const homepage_card_bodystyle = {"borderRadius": "0px"};
-const card_props = {onClick: ()=>alert('test')};
 
 const ThreeDotsMenu = props => (<Dropdown.Button type="text" 
 icon={<MoreOutlined style={{color: "white"}}/>}
@@ -78,7 +72,18 @@ onClick={handleButtonClick} overlay={menu} size="small" style={{ position: "abso
 
 const PlayButton = props => (<Button icon={<PlayCircleOutlined />} style={{ position: "absolute", bottom: '50%', right: "50%"}}></Button>)
 
-export default function HomePage () {
+const HomePage = withRouter((props) => {
+    const [stories, setStories] = useState([]);
+    const userId = 0;
+    const history = useHistory();
+
+    useEffect(() => {
+        axios.post("http://localhost:1337/Stories/", { userId }).then(res => {
+            const stories = res.data.stories;
+            setStories(stories);
+        })
+    }, []);
+    console.log(stories);
     return (
             <div offset={4} style={homepage_style}>
             <Divider orientation="right"><Title level={2}>הסיפורים שלי</Title></Divider>
@@ -86,25 +91,15 @@ export default function HomePage () {
             <a href="#" style={{padding:"8px"}}>כל הסיפורים</a>
             </Row>
             <Row gutter={16}>
-            <Col className="gutter-row" span={6}>
-                <SlideCard cardProps={card_props} cardStyle={homepage_card_style} imageUrl='https://futurism.com/wp-content/uploads/2015/11/neildegrassetyson.jpg'/>
-                <ThreeDotsMenu></ThreeDotsMenu>
-            </Col>
-            <Col className="gutter-row" span={6}>
-                <SlideCard cardProps={card_props} cardStyle={homepage_card_style} imageUrl='https://futurism.com/wp-content/uploads/2015/11/neildegrassetyson.jpg'/>
-                <ThreeDotsMenu></ThreeDotsMenu>
-            </Col>
-            <Col className="gutter-row" span={6}>
-                <SlideCard cardProps={card_props} cardStyle={homepage_card_style} imageUrl='https://futurism.com/wp-content/uploads/2015/11/neildegrassetyson.jpg'/>
-                <ThreeDotsMenu></ThreeDotsMenu>
-            </Col>
-            <Col className="gutter-row" span={6}>
-                <SlideCard cardProps={card_props} cardStyle={homepage_card_style} imageUrl='https://futurism.com/wp-content/uploads/2015/11/neildegrassetyson.jpg'/>
-                <ThreeDotsMenu></ThreeDotsMenu>
-            </Col>
+            {stories.map(story => (
+                <Col className="gutter-row" span={6}>
+                    <SlideCard cardProps={{onClick: () => history.push({pathname: `/story/${story.storyId}`})}} cardStyle={homepage_card_style} imageUrl={story.thumbnail}/>
+                    <ThreeDotsMenu></ThreeDotsMenu>
+                </Col>
+            ))}
             </Row>
             <div style={{"padding-top": "40px", "padding-bottom": "30px", direction:"rtl"}}>
-            <Button type="primary" shape="round" icon={<PlusOutlined />} size={"large"}>
+            <Button onClick= {() => {history.push({pathname: "/create"})}} type="primary" shape="round" icon={<PlusOutlined />} size={"large"}>
             צור סיפור חדש
             </Button>
             </div>
@@ -121,4 +116,6 @@ export default function HomePage () {
             </Row>
         </div>
     )
-}
+});
+
+export default HomePage;
