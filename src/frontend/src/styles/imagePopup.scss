@@ -1,0 +1,30 @@
+.image-popup-body {
+  width: 100%;
+}
+.image-popup-icons {
+  width: 20%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 5vh auto;
+}
+.image-popup-icon {
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  > div {
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img{
+        width: 18px;
+        height: 18px;
+    }
+  }
+}

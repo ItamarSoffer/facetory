@@ -5,14 +5,12 @@ import AppRouter from "./Router/AppRouter";
 import "antd/dist/antd.css";
 import { checkJwt } from "./Actions/jwtActions";
 import { connect } from "react-redux";
-import ImageSearch from "./Components/imageComponents/imageSearch";
 
 function App(props) {
   return (
-    // <AppRouter
-    //     isLogged={checkJwt(props.jwtToken)}
-    // />
-    <ImageSearch />
+    <AppRouter
+        isLogged={checkJwt(props.jwtToken)}
+    />
   );
 }
 const mapStateToProps = (state) => {
