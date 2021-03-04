@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class FacetoryDAL(ABC):
     def get_all_users():
         pass
