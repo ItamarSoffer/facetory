@@ -1,6 +1,6 @@
 import useImage from "use-image";
-import React, {useRef} from "react";
-import { Stage, Layer, Image } from "react-konva";
+import React, { useRef } from "react";
+import { Image } from "react-konva";
 
 const CanvasImage = (props) => {
   const [img] = useImage(props.src);
@@ -12,11 +12,10 @@ const CanvasImage = (props) => {
       x={props.x}
       y={props.y}
       angle={props.angle}
-    //   width={props.size}
-    //   height={props.size}
       offsetX={img ? img.width / 2 : 0}
       offsetY={img ? img.height / 2 : 0}
       width={props.size}
+      height={props.size}
       draggable
       onDragStart={(e) => {
         // console.log("started dragging!!");
