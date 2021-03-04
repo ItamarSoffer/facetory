@@ -1,6 +1,6 @@
 import React, { Component, useRef } from 'react';
 
-const ColorToolbar = (props) => {
+const Colors = (props) => {
 
     const colors = useRef([
         '#4B5DFF',
@@ -13,18 +13,20 @@ const ColorToolbar = (props) => {
         '#239784',
         '#519723',
         '#237197',
-        '#000206'
+        '#000206',
+        '#F4F8FF',
+        '#FFFFFF'
     ])
 
-    return (<div className='color-toolbar'>
+    return (<div className='colors'>
         {colors.current.map(color => {
             return <div
                 style={{ backgroundColor: color }}
-                className='color-button'
+                className={`color-button ${props.currentColor === color&&'current-color'}`}
                 onClick={() => props.setColor(color)}
             />
         })}
     </div>)
 }
 
-export default ColorToolbar;
+export default Colors;
