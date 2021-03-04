@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
-import Canvas from "../Components/Canvas";
-import Colors from '../Components/Colors'
-import Recorder from '../Components/Recorder/Recorder';
-import ImagePopup from '../Components/imageComponents/ImagePopup'
+import Canvas from "../Canvas";
+import Colors from '../Colors'
+import Recorder from '../Recorder/Recorder';
+import ImagePopup from '../imageComponents/ImagePopup'
 
 //HARD-CODED
 const slide =
