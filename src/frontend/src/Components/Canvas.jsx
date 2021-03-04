@@ -1,13 +1,32 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Stage, Layer, Text } from "react-konva";
+import React, { useState, useEffect, useRef } from "react";
+import { Stage, Layer, Image } from "react-konva";
+import useImage from "use-image";
+
+const URLImage = ({ image }) => {
+  const [img] = useImage(image.src);
+  return (
+    <Image
+      image={img}
+      x={image.x}
+      y={image.y}
+      // I will use offset to set origin to the center of the image
+      offsetX={img ? img.width / 2 : 0}
+      offsetY={img ? img.height / 2 : 0}
+    />
+  );
+};
 
 const Canvas = (props) => {
-  const [x, setX] = useState(50);
-  const [y, setY] = useState(50);
-  const [isDragging, setIsDragging] = useState(false);
   const wrapperRef = useRef(null);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
+  const dragUrl = useRef();
+  const stageRef = useRef();
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    console.log(images)
+  }, [images])
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -15,36 +34,50 @@ const Canvas = (props) => {
       setHeight(wrapperRef.current.offsetHeight);
     }
   }, [wrapperRef]);
-
   return (
-    <div className="slide-canvas-wrapper" ref={wrapperRef}>
+    <div>
       <img
-        width={width ? width : 0}
-        // height={height ? height : 0}
-        className="slide-canvas-image"
-        src={props.imageUrl}
-        alt="תמונה"
+        alt="lion"
+        src="https://konvajs.org/assets/lion.png"
+        draggable="true"
+        onDragStart={(e) => {
+          dragUrl.current = e.target.src;
+        }}
       />
-      <Stage width={width ? width : 0} height={height ? height : 0}>
-        <Layer width={width ? width : 0} height={height ? height : 0}>
-          <Text
-            id="slide-canvas-sticker"
-            text="Draggable Text"
-            x={x}
-            y={y}
-            draggable
-            fill={isDragging ? "green" : "black"}
-            onDragStart={() => {
-              setIsDragging(true);
-            }}
-            onDragEnd={(e) => {
-              setIsDragging(false);
-              setX(e.target.x());
-              setY(e.target.y());
-            }}
+      <div
+        onDrop={(e) => {
+          e.preventDefault();
+          // register event position
+          stageRef.current.setPointersPositions(e);
+          // add image
+          setImages(
+            images.concat([
+              {
+                ...stageRef.current.getPointerPosition(),
+                src: dragUrl.current
+              }
+            ])
+          );
+        }}
+        onDragOver={(e) => e.preventDefault()}
+      >
+        <div className="slide-canvas-wrapper" ref={wrapperRef}>
+          <img
+            width={width ? width : 0}
+            height={height ? height : 0}
+            className="slide-canvas-image"
+            src={props.imageUrl}
+            alt="תמונה"
           />
-        </Layer>
-      </Stage>
+          <Stage width={width ? width : 0} height={height ? height : 0} ref={stageRef}>
+            <Layer width={width ? width : 0} height={height ? height : 0}>
+              {images.map((image, index) => {
+                return <URLImage key={index} image={image} />;
+              })}
+            </Layer>
+          </Stage>
+        </div>
+      </div>
     </div>
   );
 };
