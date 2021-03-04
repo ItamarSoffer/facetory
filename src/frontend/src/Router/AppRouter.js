@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
     LoginOutlined,
     RedditOutlined
@@ -7,7 +7,6 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Redirect
 } from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import HomePage from "../Pages/HomePage";
@@ -17,18 +16,16 @@ import StoryViewerPage from "../Pages/StoryViewerPage";
 import StoryMainPage from "../Pages/StoryMainPage";
 import {FirebaseAuthConsumer, IfFirebaseAuthed, IfFirebaseUnAuthed} from "@react-firebase/auth";
 import firebase from "firebase";
-import {Breadcrumb, Button, Layout, Menu} from "antd";
-import {Header} from "antd/lib/layout/layout";
-import {Content, Footer} from "antd/es/layout/layout";
+import {Menu} from "antd";
+import {Content} from "antd/es/layout/layout";
 
 
-export default function AppRouter(props) {
-    const [token, setToken] = useState(0);
+export default function AppRouter() {
     return (
         <Router>
             <Switch>
                 <FirebaseAuthConsumer>
-                    {({isSignedIn, user}) => {
+                    {({isSignedIn}) => {
                         return !isSignedIn ?
                             <div>
                                 <Route path="/" component={LoginPage}/>
@@ -57,10 +54,8 @@ export default function AppRouter(props) {
                                 </Content>
                             </div>
                     }}
-                        </FirebaseAuthConsumer>
-                        </Switch>
-
-                        </Router>
-                        )
-
-                    }
+                </FirebaseAuthConsumer>
+            </Switch>
+        </Router>
+    )
+}
