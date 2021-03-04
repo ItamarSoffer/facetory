@@ -87,7 +87,7 @@ def auth_required(func):
             validated_firebase_obj = validated_firebase_obj = auth.verify_id_token(firebase_token ,app=fb_ctx)
             if not validated_firebase_obj: # not userid_in_db(userId):
                 return {
-                    "status": "unauthorized",
+                    "status": "unauthorized"
                     "description": "User token is invalid"
                 }
             # validated_firebase_obj = {}
