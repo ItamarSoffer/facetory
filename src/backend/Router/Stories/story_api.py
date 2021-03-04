@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from src.backend.DAL.FacetoryDAL import FacetoryDAL
+from src.backend.DAL.Implementation.facetory_mongo_dal import MongoDAL
 from fastapi.responses import UJSONResponse
 from src.backend.Utils import path_utils
 from src.backend.Utils import picture_utils
@@ -12,13 +12,13 @@ router = APIRouter(
 )
 
 # TODO: Get this from somewhere else.
-dbDAL = FacetoryDAL()
+dbDAL = MongoDAL()
 # TODO: Translate a user_token to user_id in the DB
 
 @router.post("/GetStories", response_class=UJSONResponse)
 def get_all_stories(user_token: str):
     try:
-        all_stories = dbDAL.get_all_stories(user_token)
+        all_stories = dbDAL.get_stories(user_id=user_token)
 
         # Creating the relevent json to send in the response:
         story_list = []
@@ -37,14 +37,14 @@ def get_all_stories(user_token: str):
 @router.post("/CreateStory", response_class=UJSONResponse)
 def creat_story(user_token: str, story_name: str, child_name: str, gender: str):
     try:
-        story = dbDAL.insert_story(user_token, story_name, child_name, gender)
+        story = dbDAL.insert_story(user_id=user_token, story_name=story_name, child_name=child_name, gender=gender)
 
         # Creating the relevent json to send in the response:
         return {"status": "success",
-                "storyId": story.id})
+                "storyId": story.id}
     except:
         return {"status": "failed",
-                "storyId": -1})
+                "storyId": -1}
 
 @router.post("/CreateStory", response_class=UJSONResponse)
 def update_story(user_token:str, story_id: int, story_name: str, child_name: str, gender: str):
