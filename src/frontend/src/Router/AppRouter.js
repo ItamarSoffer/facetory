@@ -10,7 +10,7 @@ import HomePage from "../Pages/HomePage";
 import CreateStoryPage, {EditStoryCard} from "../Pages/CreateStoryPage";
 import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
-import StoryMainPage from "../Pages/StoryMainPage";
+import EditStoryPage from "../Pages/EditStoryPage";
 
 
 export default function AppRouter(props) {
@@ -32,7 +32,7 @@ export default function AppRouter(props) {
 
                                     <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage}/>
 
-                                    <Route path="/story/:story_id"  exact={true} component={StoryMainPage}/>
+                                    <Route path="/story/:storyId"  exact={true} component={EditStoryPage}/>
 
                                     <Route path="/create" component={CreateStoryPage}/>
                                     {/* <Route path="/edit" component={EditStoryCard}/> */}

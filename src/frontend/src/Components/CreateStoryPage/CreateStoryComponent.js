@@ -2,14 +2,10 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
-import { AudioOutlined, PlusSquareOutlined } from '@ant-design/icons';
-import { apiCreateStory, apiUpdateStory } from '../../API/CreateStoryAPI';
-import {fallback_img, INVALID_STORY} from "../../api_consts"
-
-
-
-//import './index.css';
-import {Radio, Tooltip, Typography, Space, Form, Input, Button, Image} from 'antd';
+import { AudioOutlined } from '@ant-design/icons';
+import {INVALID_STORY} from "../../api_consts"
+import { apiCreateStory } from '../../API/CreateStoryAPI';
+import {Card, Radio, Tooltip, Typography, Space, Form, Input, Button} from 'antd';
 const { Title } = Typography;
 
 const layout = {
@@ -45,28 +41,56 @@ const validateMessages = {
   /* eslint-enable no-template-curly-in-string */
 
 
-export const CreateStoryForm = ({storyId, setStoryId}) => {
-    const [genderRadioValue, setGenderRadioValue] = useState('boy')
-    const onFinish = ({Title, ChildName}) => {
-        if (storyId == INVALID_STORY)
-        {
-            console.log("finished create story form")
-            const userToekn = window.localStorage.getItem('jwtToken');
-            apiCreateStory(userToekn, Title, ChildName, genderRadioValue, (storyId) => {
-                setStoryId(storyId);
-            });
-        }else
-        {
-            console.log("finished update story form")
-            const userToekn = window.localStorage.getItem('jwtToken');
-            apiUpdateStory(userToekn, storyId, Title, ChildName, genderRadioValue); 
-        }
-        };
+// This function is used for both edit and create story - in edit i receive a valid story id and null setStoryId
+// in create i receive a valid storyId and setStoryId which i create with useState in CreateStoryPage
+
+export const CreateStoryForm = ({history}) => {
+  const createStoryHandler = ({Title, ChildName, gender}) => {
+    console.log("finished create story form")
+    const userToekn = window.localStorage.getItem('jwtToken');
+    console.log("gender is: ", gender)
+    apiCreateStory(userToekn, Title, ChildName, gender, (storyId) => {
+        // redirect to story editor!!
+        history.push({pathname: `/story/${storyId}/`, })
+    });
+  };
+  return <ChangeStoryForm formButtonName="Create Story" formSubmitHandler={createStoryHandler}/>
+};
+
+export const GenericCardWrapper = props => {
+    return (  <div
+        style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute', left: '50%', top: '40%',
+            transform: 'translate(-50%, -50%)'
     
+        }}>
+        <Card
+        style={{
+            width: 400,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '12px',
+            borderColor: '#ddd',
+            minHeight: 300
+                
+        }}>
+            {props.children}
+        </Card>
+        </div>
+        )
+}
+export const ChangeStoryForm = ({formButtonName, formSubmitHandler}) =>
+{
+    const [genderRadioValue, setGenderRadioValue] = useState('boy')
+ 
       return (
         <div>
         
-        <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+        <Form {...layout} name="nest-messages" onFinish={formSubmitHandler} validateMessages={validateMessages}>
         <Title level={4} style={{textAlign:"left"}}>New Story </Title>
         
           <Form.Item
@@ -89,7 +113,9 @@ export const CreateStoryForm = ({storyId, setStoryId}) => {
             <Input placeholder="שם הילד" suffix={AudioSuffix} />
 
           </Form.Item>
-         <Form.Item>
+         <Form.Item
+         name={['gender']}
+         >
           <Space>Gender:
          <Radio.Group onChange={(item) => {setGenderRadioValue(item.target.value);} }
           value={genderRadioValue}
@@ -107,76 +133,12 @@ export const CreateStoryForm = ({storyId, setStoryId}) => {
 
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 0 }}>
         <Button type="primary" htmlType="submit">
-            { storyId == INVALID_STORY ?  "Create Story" : "Save Story"}
+            {formButtonName}
         </Button>
         </Form.Item>
 
         </Form>
         </div>
       );
-  };
-/* slides example
-  "slides": [
-    {
-      "slideName": "TempA",
-      "slideId": "1339",
-      "text": "Super Child",
-      "audio": "lol_audio.mp4",
-      "picture": "lol_file.jpg"
-    },
-    {
-      "slideName": "TempB",
-      "slideId": "1340",
-      "text": "Super Duper Child",
-      "audio": "lol_audio2.mp4",
-      "picture": "lol_file2.jpg"
-    }
-  ]
-*/
+};
 
-const Slide = ({slideName, imgPath}) => 
-{
-    const img_url = 'https://zos.alipayobjects.com/'.concat(imgPath) 
-    return (
-    <Space align='center' direction="vertical">
-        <Image width={100} src={img_url} fallback={fallback_img}/>
-        <text> {slideName} </text>
-    </Space>
-     );
-}
-/*
-export const SlidesView = () => {
-    
-    // 1 - get stories from redux store
-    // 2 - get stories from backend with API call 
-    
-    return <div></div>
-};*/
-const AddSlideButton = (
-    <Button type="primary" size = "default"  icon = {<PlusSquareOutlined/>} />
-);
-const divStyle = {}
-
-export const AllSlidesView = ({Slides, AddSlideHandler}) => {
-
-    console.log(Slides)  
-    return (
-        <div>
-        <Title level={4} style={{textAlign:"left"}}>All Slides</Title>
-        <Space>
-        {Slides.map(s => 
-        <Slide slideName={s.slideName} imgPath={s.picture}/>)
-        }
-        
-        <Space align='center' direction="vertical">
-            <Button type="dashed" size="large"  icon = {<PlusSquareOutlined/>} onClick={AddSlideHandler} style={{height : "100px", width : "100px"}}>
-            </Button>
-            <text>Add Slide</text>
-        </Space>
-        </Space>
-        </div>
-      );
-  };
-
-
-  
