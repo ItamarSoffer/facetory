@@ -1,7 +1,5 @@
-from abc import ABC, abstractmethod
 from src.backend.DAL.facetory_dal import FacetoryDAL
 from src.backend.mongo_db import *
-
 from mongoengine import *
 
 
