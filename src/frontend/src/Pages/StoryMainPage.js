@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
-import { useHistory, useLocation, withRouter } from 'react-router-dom';
-import { Image, Layout, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useHistory, useLocation, useParams, withRouter } from 'react-router-dom';
+import { Image, Layout, Row, Space } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import SlideCard from '../Components/SlideCard/SliceCard';
-import { connect } from 'react-redux';
 import {
     ApartmentOutlined,
   } from '@ant-design/icons';
 import { getQueryStringParams } from '../Actions/queryStringActions';
+import axios from 'axios';
+import NewSquare from '../Components/NewSquare/NewSqure';
+import { connect } from 'react-redux';
+import { LoadingComponent } from '../Components/LoadingComponent/LoadingComponent';
 
 const { Sider } = Layout;
 
@@ -26,43 +29,58 @@ const editUrl = (history, newId) => {
 const StoryMainPage = withRouter((props) => {
     const query = getQueryStringParams(useLocation().search);
     const history = useHistory();
+    const { storyId } = useParams();
 
-    const { slides } = props;
-    const currentImageUrl = slides[query.slideId] ? slides[query.slideId].imageUrl : 0;
-        return (
-            <Layout>
-                <Sider
-                style={{
-                    height: '100vh',
-                    backgroundColor: '#ffffff',
-                    boxShadow: '10px',
-                  }}
-                  >
-                    <Row justify='center' style={{marginTop: '10px'}}>
-                        <ApartmentOutlined style={{ fontSize: '24px', color: 'black' }} />
-                    </Row>
-                    {
-                        slides.map((slide, index) => (
-                            <Row justify='center' style={{height: '150px'}}>
-                                <SlideCard cardProps={{onClick: ()=>editUrl(history, index)}} imageUrl={slide.imageUrl}/>
-                            </Row>
-                        ))
-                    }
-                </Sider>
-                <Content>
-                    <div>
-                        <Image src={currentImageUrl}/>
-                    </div>
-                </Content>
-            </Layout>
-        )
-    }
+    const [slides, setSlides] = useState([]);
+    const [isLoading, setLoading] = useState(true);
+
+    const currentId = query.slideId;
+    useEffect(async () => {
+        setLoading(true);
+        axios.post(`http://localhost:1337/GetSlides/${storyId}`, {storyId, userId:123}).then(res => {
+            setSlides(res.data.slides);
+            setLoading(false)
+        }).catch( err => console.log(err));
+    }, [storyId]);
+
+    const currentImageUrl = slides[currentId] ? slides[currentId].picture : 0;
+    return (
+        isLoading
+        ? <LoadingComponent/>
+        : <Layout>
+            <Sider
+            style={{
+                height: '100vh',
+                backgroundColor: '#ffffff',
+                boxShadow: '10px 10px 10px 10px',
+                }}
+                >
+                <Row justify='center' style={{marginTop: '10px'}}>
+                    <ApartmentOutlined style={{ fontSize: '24px', color: 'black' }} />
+                </Row>
+                {
+                    slides.map((slide, index) => (
+                        <Row justify='center'>
+                            <SlideCard
+                                cardProps={{onClick: ()=>editUrl(history, index)}}
+                                imageUrl={slide.picture}
+                                cardStyle={index === parseInt(currentId) ? {boxShadow: '0 0 2px 1px #02A9DA'} : {}}
+                            />
+                        </Row>
+                    ))
+                }
+                <div style={{height: '7px'}}/>
+                <Row justify='center'>
+                    <NewSquare style={{marginTop: '10px'}} onClick={() => console.log('newSlide')}/>
+                </Row>
+            </Sider>
+            <Content>
+                <div>
+                    <Image src={currentImageUrl}/>
+                </div>
+            </Content>
+        </Layout>
+    )}
 );
-const mapStateToProps = state => ({
-    slides: [
-        {imageUrl: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=853&q=80'},
-        {imageUrl: 'https://static.toiimg.com/photo/72975551.cms'},
-    ],
-})
 
-export default connect(mapStateToProps)(StoryMainPage);
+export default StoryMainPage;

@@ -32,7 +32,7 @@ export default function AppRouter(props) {
 
                                     <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage}/>
 
-                                    <Route path="/story/:story_id"  exact={true} component={StoryMainPage}/>
+                                    <Route path="/story/:storyId"  exact={true} component={StoryMainPage}/>
 
                                     <Route path="/create" component={CreateStoryPage}/>
 

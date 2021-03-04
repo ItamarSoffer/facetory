@@ -1,8 +1,5 @@
 import React from 'react';
-import { Card, Image } from 'antd';
-import Layout, { Content } from 'antd/lib/layout/layout';
-import Meta from 'antd/lib/card/Meta';
-import Avatar from 'antd/lib/avatar/avatar';
+import { Card } from 'antd';
 
 const SlideCard = props => {
     const { imageUrl, cardProps, cardStyle} = props;
@@ -27,8 +24,7 @@ const SlideCard = props => {
               ...cardStyle
           }}
           {...cardProps}
-      >
-          </Card>
+      />
     )
 }
 
