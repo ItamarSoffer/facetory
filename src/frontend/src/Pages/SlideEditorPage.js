@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Recorder from '../Components/Recorder/Recorder';
 
 export default function SlideEditorPage() {
+    const recordBlob = useRef(null)
+    const keyWordsTimes = useRef(null)
+
+    const onRecorderFinish = (blob, array) => {
+        recordBlob.current = blob
+        keyWordsTimes.current = array
+    }
+
+    const onRecordDelete = () => {
+        recordBlob.current = null
+        keyWordsTimes.current = null
+    }
+
     return (
         <div className='slide-editor-page'>
             <div>
@@ -22,7 +35,10 @@ export default function SlideEditorPage() {
                         </div>
                     </div>
                 </div>
-                <Recorder onFinish={(blob, array) => { console.log(blob, array) }} />
+                <Recorder
+                    onFinish={onRecorderFinish}
+                    onDelete={onRecordDelete}
+                />
             </div>
         </div>
     )
