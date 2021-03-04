@@ -48,19 +48,19 @@ const Recorder = ({ onFinish }) => {
                 visualSetting='frequencyBars'
                 timeSlice={10000}
             />
-            <div onClick={stopRecording}>stop</div>
-      
             <div
                 onTouchStart={onKeyWord}
                 onMouseDown={onKeyWord}
                 id='push-button'>
-
             </div>
-            <ClickEffect
-                onClick={startRecording}
-                id='microphone'>
-                <img src='/my-icons/microphone.svg' />
-            </ClickEffect>
+            <div
+                onClick={isRecording ? stopRecording : startRecording}
+                className={isRecording ? "recording-animation-on" : 'recording-animation'}>
+                <div
+                    className='microphone'>
+                    {isRecording ? <img src='/my-icons/frecuency.svg' /> : <img src='/my-icons/microphone.svg' />}
+                </div>
+            </div>
         </div>
     );
 };
