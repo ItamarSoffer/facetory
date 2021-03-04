@@ -1,5 +1,5 @@
 .colors {
-  width: 60vh;
+  flex-grow: 1;
   height: 5vh;
 
   display: flex;
@@ -8,13 +8,14 @@
   align-items: center;
 
   .color-button {
+    transition: opacity ease 0.3s;
 
-    &.current-color{
-        border: lightblue 2px solid;
+    &.current-color {
+      border: lightblue 2px solid;
     }
 
-    width: 20px;
-    height: 20px;
+    width: 4.5vh;
+    height: 4.5vh;
     border-radius: 50%;
     -webkit-box-shadow: 0px 1px 11px -2px rgba(0, 0, 0, 0.54);
     box-shadow: 0px 1px 11px -2px rgba(0, 0, 0, 0.54);
@@ -29,9 +30,11 @@
   background-repeat: no-repeat;
   background-size: contain;
   position: relative;
-  & > * {
+
+  &>* {
     position: absolute;
   }
+
   // .slide-canvas-image{
   //     margin: auto;
   // }

@@ -34,10 +34,6 @@ const Canvas = (props) => {
   const stageRef = useRef();
 
   useEffect(() => {
-    console.log("props.stickers", props.stickers);
-  }, []);
-
-  useEffect(() => {
     if (wrapperRef.current) {
       setCw(wrapperRef.current.offsetWidth / 100);
       setCh(wrapperRef.current.offsetHeight / 100);
