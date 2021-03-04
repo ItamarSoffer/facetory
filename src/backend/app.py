@@ -11,7 +11,7 @@ app.mount("/Resources", StaticFiles(directory="src/Resources"), "Resources")
 app.include_router(story_api.router)
 app.include_router(user_api.router)
 
-@app.get('/')
+@app.get('/')   
 def home():
     return "Hello world"
 
