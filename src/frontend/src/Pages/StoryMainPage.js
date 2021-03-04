@@ -36,7 +36,7 @@ const StoryMainPage = withRouter((props) => {
     const currentId = query.slideId;
     useEffect(async () => {
         setLoading(true);
-        axios.post(`http://localhost:1337/GetSlides/${storyId}`, {storyId, userId:123}).then(res => {
+        axios.post(`http://localhost:1337/GetSlides/`, {storyId, userId:123}).then(res => {
             setSlides(res.data.slides);
             setLoading(false)
         }).catch( err => console.log(err));
