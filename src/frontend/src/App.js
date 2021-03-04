@@ -5,13 +5,16 @@ import AppRouter from "./Router/AppRouter";
 import 'antd/dist/antd.css';
 import {checkJwt} from "./Actions/jwtActions";
 import { connect } from 'react-redux';
+import { ConfigProvider } from 'antd';
 
 
 function App(props) {
   return(
+    <ConfigProvider direction="rtl">
       <AppRouter
           isLogged={checkJwt(props.jwtToken)}
       />
+    </ConfigProvider>
   )
 }
 const mapStateToProps = state => {
