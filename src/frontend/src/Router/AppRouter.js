@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
     LoginOutlined,
     RedditOutlined
@@ -20,15 +20,19 @@ import {Menu, Spin} from "antd";
 import {Content} from "antd/es/layout/layout";
 
 
-export default function AppRouter(props) {
-    const [isLoading, setIsLoading] = useState(true);
+export default function AppRouter() {
     return (
         <Router>
             <Switch>
                 <FirebaseAuthConsumer>
                     {({isSignedIn, providerId}) => {
                         if (providerId === null) {
-                            return <Spin size="large" style={{display: "block", marginLeft: "auto", marginRight: "auto", marginTop: "50px"}} />
+                            return <Spin size="large" style={{
+                                display: "block",
+                                marginLeft: "auto",
+                                marginRight: "auto",
+                                marginTop: "50px"
+                            }}/>
                         }
                         if (isSignedIn) {
                             return <div>
@@ -61,10 +65,7 @@ export default function AppRouter(props) {
 
                     }}
                 </FirebaseAuthConsumer>
-
             </Switch>
-
         </Router>
     )
-
 }
