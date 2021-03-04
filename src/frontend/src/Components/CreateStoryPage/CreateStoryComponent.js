@@ -48,20 +48,20 @@ const validateMessages = {
 export const CreateStoryForm = (props) => {
     const {history, setCurrentStoryHandler} = props;
     const createStoryHandler = (values) => {
-        var {Title, ChildName, gender} = values;
+        var {Title, childName, gender} = values;
     const userToekn = window.localStorage.getItem('jwtToken');
     if (gender == undefined) 
     {
         // fix bug where default seleciton is not passed in values
-        gender = 'boy'
+        gender = 'male'
     }
-    apiCreateStory(userToekn, Title, ChildName, gender, (storyId) => {
+    apiCreateStory(userToekn, Title, childName, gender, (storyId) => {
         // redirect to story editor!!
-        setCurrentStoryHandler({storyId, storyName : Title, ChildName, gender})
+        setCurrentStoryHandler({storyId, storyName : Title, childName, gender})
         history.push({pathname: `/story/${storyId}/`, })
     });
   };
-  return <ChangeStoryForm formButtonName="Create Story" formSubmitHandler={createStoryHandler}/>
+  return <ChangeStoryForm formButtonName="צור סיפור" formSubmitHandler={createStoryHandler}/>
 };
 
 export const GenericCardWrapper = props => {
@@ -92,14 +92,13 @@ export const GenericCardWrapper = props => {
 }
 export const ChangeStoryForm = (props) =>
 {
-    const {formButtonName, formSubmitHandler, storyData = {storyName : '', ChildName : '', gender : 'boy'}} = props
+    const {formButtonName, formSubmitHandler, storyData = {storyName : '', childName : '', gender : 'male'}} = props
     const [genderRadioValue, setGenderRadioValue] = useState(storyData.gender)
-    console.log("got story data in change story form: ", storyData)
       return (
         <div>
         
         <Form {...layout} name="nest-messages" onFinish={formSubmitHandler} validateMessages={validateMessages}>
-        <Title level={4} style={{textAlign:"left"}}>New Story </Title>
+        <Title level={4} style={{textAlign:"left"}}>צור סיפור</Title>
         
           <Form.Item
             name={['Title']}
@@ -108,23 +107,23 @@ export const ChangeStoryForm = (props) =>
             
           </Form.Item>
           <Form.Item
-            name={['ChildName']}
+            name={['childName']}
           >
-            <Input placeholder="שם הילד" defaultValue={storyData.ChildName} suffix={AudioSuffix} />
+            <Input placeholder="שם הילד" defaultValue={storyData.childName} suffix={AudioSuffix} />
 
           </Form.Item>
          <Form.Item
          name={['gender']}
          >
-          <Space>Gender:
+          <Space>מין:
          <Radio.Group onChange={(item) => {setGenderRadioValue(item.target.value);} }
           value={genderRadioValue}
           optionType="button"
           buttonStyle="solid"
         >
         <Space>
-        <Radio.Button value="boy" buttonStyle="solid">Boy</Radio.Button>
-        <Radio.Button value="girl" buttonStyle="solid">Girl</Radio.Button>
+        <Radio.Button value="male" buttonStyle="solid">בן</Radio.Button>
+        <Radio.Button value="female" buttonStyle="solid">בת</Radio.Button>
         </Space>
         </Radio.Group>
 

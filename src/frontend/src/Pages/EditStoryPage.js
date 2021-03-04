@@ -13,8 +13,7 @@ import { connect } from 'react-redux';
 
 export const  EditStoryPage = (props) =>
 {
-    console.log("mprops:", props)
-    const {storyId} = props.currentStory.storyId
+    const storyId = props.currentStory.storyId
     const history = useHistory();
     const [slides,  setSlides] = useState([]);
     //const [storyId, setStoryId] = useState(0)
@@ -22,12 +21,10 @@ export const  EditStoryPage = (props) =>
         // populate Slides
         const userToekn = window.localStorage.getItem('jwtToken');
         apiGetSlides(userToekn, storyId).then((response) => {
-            console.log("resp", response);
             if (response.status === 201){
                 console.log("error with getting slides")
             }
             else if (response.status === 200){
-                console.log("returnd slides", response.data.slides)
                 setSlides(response.data.slides) 
             }
         });        
@@ -37,8 +34,7 @@ export const  EditStoryPage = (props) =>
    
     const AddNewSlide = () =>
     {
-        console.log("added new slide")
-        history.push({pathname: `/story/${storyId}/editor`, })
+        history.push({pathname: `/story/${storyId}/main`, })
     }
 
    return (
@@ -52,37 +48,11 @@ export const  EditStoryPage = (props) =>
 
 // when IsLogged is changed, run checkJwt 
 const mapStateToProps = state => {
-    return {
-        currentStory: (state.usersReducer.currentStory),
+    return {    
+        currentStory: state.usersReducer.currentStory,
 
     }
 };
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         login: (email,password) => {
-//             dispatch(loginAction(email,password));
-//         }
-//     }
-// };
-
 
 export default connect(mapStateToProps, null)(withRouter(EditStoryPage));
-/*
-const StoryMainPage = withRouter((props) => {
-        return (
-            <div>
-                StoryMainPage
-                {props.history.location.pathname}
-                <button
-                onClick={() =>{props.history.push("/")}}
-                >CLICK</button>
-                <button
-                    onClick={() =>{console.log(props.history.location)}}
-                >LOG</button>
-            </div>
-        )
-    }
-);
-
- export default StoryMainPage;*/

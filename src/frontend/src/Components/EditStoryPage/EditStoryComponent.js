@@ -9,14 +9,12 @@ import {message, Typography, Space, Button, Image} from 'antd';
 
 const { Title } = Typography;
 export const EditStoryForm = (props) => {
-    const EditStoryHandler = ({Title, ChildName, gender}) => {
-        console.log("finished update story form")
+    const EditStoryHandler = ({Title, childName, gender}) => {
         const userToekn = window.localStorage.getItem('jwtToken');
-        apiUpdateStory(userToekn, props.storyId, Title, ChildName, gender); 
+        apiUpdateStory(userToekn, props.storyId, Title, childName, gender); 
     };
   
-  console.log("story props: ", props)
-  return <ChangeStoryForm formButtonName="Save Story" formSubmitHandler={EditStoryHandler} storyData={props.currentStory}/>
+  return <ChangeStoryForm formButtonName="שמור סיפור" formSubmitHandler={EditStoryHandler} storyData={props.currentStory}/>
   };
 
 /* slides example

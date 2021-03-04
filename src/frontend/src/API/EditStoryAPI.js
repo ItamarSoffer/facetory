@@ -11,17 +11,16 @@ export const apiGetStory = (userJwt, storyId) => {
         })
 };
 
-export const apiUpdateStory = (userJwt, storyId, storyName, ChildName, gender) => {
+export const apiUpdateStory = (userJwt, storyId, storyName, childName, gender) => {
     const saveStoryApi = backendAPI.concat(`/UpdateStory`);
     return axios.post(saveStoryApi,
         {
             'userId' : userJwt,
             storyId,
             storyName,
-            ChildName,
+            childName,
             gender
         }).then((response) => {
-            console.log("resp", response);
             if (response.status === 201){
                 message.warning(response.data)
             }

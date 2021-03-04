@@ -2,16 +2,15 @@ import {message} from "antd";
 import axios from 'axios';
 import {backendAPI} from "../api_consts";
 
-export const apiCreateStory = (userJwt, storyName, ChildName, gender, onReceive) => {
+export const apiCreateStory = (userJwt, storyName, childName, gender, onReceive) => {
     const saveStoryApi = backendAPI.concat(`/CreateStory`);
     return axios.post(saveStoryApi,
         {
             'userId' : userJwt,
             storyName,
-            ChildName,
+            childName,
             gender
         }).then((response) => {
-            console.log("resp", response);
             if (response.status === 201){
                 message.warning(response.data)
             }

@@ -3,7 +3,6 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Redirect
 } from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import HomePage from "../Pages/HomePage";
@@ -11,6 +10,7 @@ import CreateStoryPage, {EditStoryCard} from "../Pages/CreateStoryPage";
 import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
 import EditStoryPage from "../Pages/EditStoryPage";
+import StoryMainPage from "../Pages/StoryMainPage";
 
 
 export default function AppRouter(props) {
@@ -33,6 +33,8 @@ export default function AppRouter(props) {
                                     <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage}/>
 
                                     <Route path="/story/:storyId"  exact={true} component={EditStoryPage}/>
+                                    
+                                    <Route path="/story/:storyId/main"  exact={true} component={StoryMainPage}/>
 
                                     <Route path="/create" component={CreateStoryPage}/>
                                     {/* <Route path="/edit" component={EditStoryCard}/> */}

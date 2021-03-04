@@ -15,7 +15,6 @@ const initState = {
 };
 
 const usersReducer = (state = initState, action) => {
-    console.log(action)
     switch(action.type){
         case "LOGIN":
             window.localStorage.setItem('jwtToken',action.jwtToken);
@@ -28,7 +27,6 @@ const usersReducer = (state = initState, action) => {
             }
             break;
         case "EDIT_STORY":
-            console.log("got story change in reducer!!", action)
             state = {...state,
                 currentStory: action.payload.currentStory,
             };

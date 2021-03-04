@@ -24,7 +24,6 @@ const CreateStoryPage =  (props) => {
 const mapDispatchToProps = dispatch => {
     return {
         setCurrentStory: (currentStory) => {
-            console.log("TEST")
             dispatch(setCurrentStoryAction(currentStory));
         }
     }
