@@ -43,6 +43,7 @@ const ImageSearch = () => {
       <input
         className='searchInput'
         onChange={(e) => {
+          if (e.target.value.length > 50) return;
           setSearchString(e.target.value);
           getImages(e.target.value);
         }}

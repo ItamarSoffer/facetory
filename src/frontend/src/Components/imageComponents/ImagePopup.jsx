@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Popup from "../general-components/Popup";
 import ImageSearch from "./ImageSearch";
 import ImageUploader from "./ImageUploader";
 import "../../styles/imagePopup.scss";
 
-const ImagePopup = ({ open }) => {
+const ImagePopup = (props) => {
   const [isUpload, setIsUpload] = useState(true); //state that determines whether the user is uploading an image(true) or searching an image(false)
   const [imageSource, setImageSource] = useState("");
 
+  useEffect(() => {
+    setImageSource("");
+  }, [isUpload]);
+
   return (
-    <Popup isShowing={true}>
+    <Popup isShowing={props.isOpen} handleClose={props.close && props.close}>
       <div className="image-popup-body" dir="rtl">
         <div className="image-popup-icons">
           <div
@@ -48,6 +52,20 @@ const ImagePopup = ({ open }) => {
             <ImageSearch setSource={setImageSource} />
           )}
         </div>
+        {imageSource ? (
+          <div
+            className="confirm-button"
+            onClick={() => {
+              if (!imageSource) return;
+              props.setImageSource && props.setImageSource(imageSource);
+              props.close && props.close();
+            }}
+          >
+            אישור
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </Popup>
   );
