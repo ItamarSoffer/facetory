@@ -6,10 +6,11 @@ import "../../styles/imagePopup.scss";
 
 const ImagePopup = ({ open }) => {
   const [isUpload, setIsUpload] = useState(true); //state that determines whether the user is uploading an image(true) or searching an image(false)
+  const [imageSource, setImageSource] = useState("");
 
   return (
     <Popup isShowing={true}>
-      <div className="image-popup-body">
+      <div className="image-popup-body" dir="rtl">
         <div className="image-popup-icons">
           <div
             className="image-popup-icon"
@@ -17,9 +18,11 @@ const ImagePopup = ({ open }) => {
             style={{ borderBottom: isUpload ? "none" : "2px solid #4b7cff" }}
           >
             <div style={{ backgroundColor: isUpload ? "#ffffff" : "#4b7cff" }}>
-              <img
-                src={`/my-icons/search-${isUpload ? "blue" : "white"}.svg`}
-                alt="חיפוש"
+              <div
+                style={{
+                  WebkitMaskImage: `url(/my-icons/search-blue.svg)`,
+                  background: isUpload ? "#4b7cff" : "#ffffff"
+                }}
               />
             </div>
           </div>
@@ -29,14 +32,22 @@ const ImagePopup = ({ open }) => {
             style={{ borderBottom: !isUpload ? "none" : "2px solid #4b7cff" }}
           >
             <div style={{ backgroundColor: !isUpload ? "#ffffff" : "#4b7cff" }}>
-              <img
-                src={`/my-icons/upload-${!isUpload ? "blue" : "white"}.svg`}
-                alt="העלאה"
+              <div
+                style={{
+                  WebkitMaskImage: `url(/my-icons/upload-blue.svg)`,
+                  background: !isUpload ? "#4b7cff" : "#ffffff"
+                }}
               />
             </div>
           </div>
         </div>
-        <div>{isUpload ? <ImageUploader /> : <ImageSearch />}</div>
+        <div>
+          {isUpload ? (
+            <ImageUploader source={imageSource} setSource={setImageSource} />
+          ) : (
+            <ImageSearch setSource={setImageSource} />
+          )}
+        </div>
       </div>
     </Popup>
   );
