@@ -4,7 +4,6 @@ connect("tell_story")
 
 
 class Picture(Document):
-    picture_id = ObjectIdField()
     path = StringField(required=True)
     angle = FloatField(required=True)
     size = FloatField(required=True)
@@ -13,7 +12,6 @@ class Picture(Document):
 
 
 class Slide(Document):
-    slide_id = ObjectIdField()
     background_color = StringField(required=True, max_length=50)
     background_picture = ReferenceField(Picture)
     pictures = ListField(ReferenceField(Picture))
@@ -23,7 +21,6 @@ class Slide(Document):
 
 
 class Story(Document):
-    story_id = ObjectIdField()
     name = StringField(required=True, max_length=50)
     child_name = StringField(required=True, max_length=50)
     gender = StringField(required=True)
@@ -31,7 +28,6 @@ class Story(Document):
 
 
 class AppUser(Document):
-    user_id = ObjectIdField()
     google_id = StringField()
     name = StringField(max_length=50, unique=True)
     stories = ListField(ReferenceField(Story))
