@@ -60,7 +60,7 @@ const slide =
     }
 }
 
-export default function SlideEditorPage() {
+export default function SlideEditor() {
     const recordBlob = useRef(null)
     const keyWordsTimes = useRef(null)
     const [isImagesPopupOpen, setIsImagesPopupOpen] = useState(false)

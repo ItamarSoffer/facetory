@@ -7,7 +7,6 @@ import {
 import LoginPage from "../Pages/LoginPage";
 import HomePage from "../Pages/HomePage";
 import CreateStoryPage, {EditStoryCard} from "../Pages/CreateStoryPage";
-import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
 import EditStoryPage from "../Pages/EditStoryPage";
 import StoryMainPage from "../Pages/StoryMainPage";
@@ -30,8 +29,6 @@ export default function AppRouter(props) {
 
                             {/* TODO: adapt url */}
                             <Route path="/story/:story_id/view" exact={true} component={StoryViewerPage} />
-
-                            <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage} />
 
                              <Route path="/story/:storyId"  exact={true} component={EditStoryPage}/>
                                     
