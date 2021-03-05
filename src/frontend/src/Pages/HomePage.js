@@ -8,7 +8,7 @@ import NewStoryButton from '../Components/HomePage/CreateNewStory';
 import "antd/dist/antd.css";
 
 
-const homepage_style = { "padding": "20px", direction: "rtl" };
+const homepage_style = {direction: "rtl" };
 
 const HomePage = withRouter((props) => {
     const [stories, setStories] = useState([]);

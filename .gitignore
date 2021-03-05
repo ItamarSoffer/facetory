@@ -9,6 +9,7 @@ src/frontend/node_modules/
 
 #pycharm
 /.idea
+**/.idea/
 
 # testing
 /coverage
