@@ -10,9 +10,10 @@ import {
 } from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import HomePage from "../Pages/HomePage";
-import CreateStoryPage from "../Pages/CreateStoryPage";
+import CreateStoryPage, {EditStoryCard} from "../Pages/CreateStoryPage";
 import SlideEditorPage from "../Pages/SlideEditorPage";
 import StoryViewerPage from "../Pages/StoryViewerPage";
+import EditStoryPage from "../Pages/EditStoryPage";
 import StoryMainPage from "../Pages/StoryMainPage";
 import {FirebaseAuthConsumer} from "@react-firebase/auth";
 import firebase from "firebase";
@@ -51,13 +52,19 @@ export default function AppRouter() {
                             </Menu>
                             <Content className="site-layout" style={{padding: '0 50px', marginTop: 64}}>
                                 <div>
-                                    <Route path="/story/:story_id/view" exact={true}
-                                           component={StoryViewerPage}/>
-                                    <Route path="/story/:story_id/editor" exact={true}
-                                           component={SlideEditorPage}/>
-                                    <Route path="/story/:story_id" exact={true} component={StoryMainPage}/>
+                                    {/* TODO: adapt url */}
+                                    <Route path="/story/:story_id/view" exact={true} component={StoryViewerPage}/>
+
+                                    <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage}/>
+
+                                    <Route path="/story/:storyId"  exact={true} component={EditStoryPage}/>
+
+                                    <Route path="/story/:storyId/main"  exact={true} component={StoryMainPage}/>
+
                                     <Route path="/create" component={CreateStoryPage}/>
-                                    <Route path="/login" component={LoginPage}/>
+                                    {/* <Route path="/edit" component={EditStoryCard}/> */}
+
+                                    {/* <Route path="/login" component={LoginPage}/> */}
                                     <Route exact path="/" component={HomePage}/>
                                 </div>
                             </Content>

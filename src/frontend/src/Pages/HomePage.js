@@ -21,7 +21,6 @@ const HomePage = withRouter((props) => {
             setStories(stories);
         })
     }, []);
-    console.log(stories);
     return (
         <div offset={4} style={homepage_style}> 
             <StoriesView stories={stories} history={history}></StoriesView>
