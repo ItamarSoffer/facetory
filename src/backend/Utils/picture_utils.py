@@ -19,4 +19,4 @@ def create_picture_thumbnail(image_path: str):
     return thumbnail_path
 
 def get_picture_data(url: str):
-    return urllib.request.urlopen(url).read()
+    return urllib.request.urlopen(url).read(), path.basename(urllib.parse.urlparse(url).path)

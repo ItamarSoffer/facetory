@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from src.backend.DAL.Implementation.facetory_mongo_dal import MongoDAL
 from fastapi.responses import UJSONResponse
-from src.backend.Utils import path_utils
-from src.backend.Utils import picture_utils
+from src.backend.Utils import path_utils, picture_utils, json_utils
 from src.backend.Router.Users import user_api
 from fastapi import APIRouter, Depends, HTTPException
 from firebase_admin import auth,credentials, initialize_app
@@ -15,6 +14,7 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+# TODO: Replace all the prints with proper logging library
 # Realy bad code. Should only run once!! need to find a better way to do this.
 # In addition we couldn't find a proper way to validate teh credentials in each function without 
 # Repeating the code. The dependencies simple didn't work properly - Should probably return a temp unique
@@ -34,6 +34,9 @@ dbDAL = MongoDAL()
 
 @router.post("/GetStories", response_class=UJSONResponse)
 def get_all_stories(user_uid: str):
+    # TODO: This code gets repeated in each function. It happens because
+    # the identification doesn't work 100%, It should be a dependency(Read about FastAPI).
+    # We shouldn't relay on the user_uid that is written inside the decoded xtoken.
     auth_worked, user_uid = auth_required(user_uid)
     if (not auth_worked):
         return {
@@ -96,6 +99,7 @@ def update_story(user_uid:str, story_id: str, story_name: str, child_name: str, 
 
 @router.post("/CreateStory", response_class=UJSONResponse)
 def delete_story(user_uid:str, story_id: str):
+    # TODO: Implement this
     pass
 
 @router.post("/GetSlides", response_class=UJSONResponse)
@@ -112,30 +116,14 @@ def get_slides(user_uid: str, story_id: str):
         # Creating the relevant json to send in the response.
         slide_list = []
         for slide in story_slides:
-<<<<<<< HEAD
-            slide_list.append(
-                {
-                "slideId": str(slide.id),
-                "e": slide.text,
-                "thumbnail": slide.thumbnail,
-                "audio_path": slide.audio,
-                "picture_path": slide.pictures})
-=======
-            slide_list.append({"slideId": slide.id,
-                "background_color": slide.background_color,
-                "background_picture": slide.background_picture,
-                "text": slide.text,
-                "audio_path": slide.audio,
-                "picture": slide.pictures})
-            print(slide_list)
->>>>>>> 7b5a2bfb5bb45a41dca0d796187bf1d179c321af
+            slide_list.append(json_utils.format_slide_json(slide))
         response = {"status": "success", "slides": slide_list}
     except Exception as e:
         response = {"status": "failed", "slides": []}   
     return response
 
 @router.post("/GetSlide", response_class=UJSONResponse)
-def get_slide(user_uid: str, story_id: str, slide_id: str):
+def get_slide(user_uid: str, slide_id: str):
     auth_worked, user_uid = auth_required(user_uid)
     if (not auth_worked):
         return {
@@ -145,8 +133,7 @@ def get_slide(user_uid: str, story_id: str, slide_id: str):
 
     try:
         slide = dbDAL.get_slide(slide_id=slide_id)
-        # TODO: JSONIFY on the slide
-        response = {"status": "success", "slide": slide}
+        response = {"status": "success", "slide": json_utils.format_slide_json(slide)}
     except Exception as e:
         print(e)
         response = {"status": "failed", "slide": ""}   
@@ -198,6 +185,7 @@ def get_slides_thumbnails(user_uid: str, story_id: str):
         response = {"status": "failed", "thumbnail": ""}   
     return response
 
+# TODO: This function can be shortened
 @router.post("/SaveSlide", response_class=UJSONResponse)
 def save_slide(user_uid: str, story_id: str, data: str):
     auth_worked, user_uid = auth_required(user_uid)
@@ -206,99 +194,81 @@ def save_slide(user_uid: str, story_id: str, data: str):
                 "status": "unauthorized",
                 "description": "User token is invalid"
             }
+    jsonData = json.loads(data)
+    picture_bytes, picture_name = picture_utils.get_picture_data(jsonData["imageUrl"])
+    background_picture_path = path_utils.generate_resource_path(user_id=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
+    with open(background_picture_path, "wb+") as picture_file:
+        picture_file.write(picture_bytes)
+    thumbnail_path = picture_utils.create_picture_thumbnail(background_picture_path)
 
-    try:
-        jsonData = json.loads(data)
-        # TODO get picture from url and save the picture
-        picture_bytes, picture_name = picture_utils.get_picture_data(jsonData["imageUrl"])
-        background_picture_path = path_utils.generate_resource_path(user_id=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
-        with open(background_picture_path, "wb+") as picture_file:
-            picture_file.write(picture_bytes)
-        thumbnail_path = picture_utils.create_picture_thumbnail(background_picture_path)
+    # Add support for audio_path(Simply read from the json)
+    audio_path = ""
+    text =  jsonData["text"]
+    # saving the background picture in the db
+    background_color = jsonData["backgroundColor"]
+    background_picture = dbDAL.insert_picture(path=background_picture_path,
+        x=jsonData["imagePosition"]["x"],
+        y=jsonData["imagePosition"]["y"],
+        angle=jsonData["imageAngle"],
+        size=jsonData["imageSize"])
 
-        backgroundColor = jsonData["backgroundColor"]
-        # saving the background picture
-        background_picture = dbDAL.insert_picture(path=background_picture_path,
-            x=jsonData["imagePosition"]["x"],
-            y=jsonData["imagePosition"]["y"],
-            angle=jsonData["imageAngle"],
-            size=jsonData["imageSize"])
+    # This section allows for further pictures to be added in the future
+    picture_id_list = []
+    if (jsonData.get("pictures") != None):
+        for picture in jsonData["pictures"]:
+            picture_bytes, picture_name = picture["data"], picture["name"]
+            picture_path = path_utils.generate_resource_path(user_id=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
+            with open(picture_path, "wb+") as picture_file:
+                picture_file.write(picture_bytes)
 
-        # This section allows for further pictures to be added in the future
-        picture_id_list = []
-        if (jsonData.get("pictures") != None):
-            for picture in jsonData["pictures"]:
-                picture_bytes, picture_name = picture["data"], picture["name"]
-                picture_path = path_utils.generate_resource_path(user_id=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
-                with open(picture_path, "wb+") as picture_file:
-                    picture_file.write(picture_bytes)
+            # inserting the picture into the db.
+            picture = dbDAL.insert_picture(path=picture_path, x=picture["x"], y=picture["y"], angle=picture["angle"], size=picture["size"])
+            picture_id_list.append(str(picture.id))
 
-                # inserting the picture into the db.
-                picture = dbDAL.insert_picture(path=picture_path, x=picture["x"], y=picture["y"], angle=picture["angle"], size=picture["size"])
-                picture_id_list.append(str(picture.id))
+    # The stickers don't need any special treatment as they are originally saved on the server.
+    sticker_id_list = []
+    for sticker in jsonData["stickers"]:
+        sticker_name = sticker["name"]
+        sticker_path = path_utils.generate_sticker_path(sticker_name)
 
-        sticker_id_list = []
-        for sticker in jsonData["stickers"]:
-            sticker_name = sticker["name"]
-            sticker_path = path_utils.generate_sticker_path(sticker_name)
+        # inserting the sticker data into the db.
+        sticker = dbDAL.insert_picture(path=sticker_path, x=sticker["x"], y=sticker["y"], angle=sticker["angle"], size=sticker["size"])
+        sticker_id_list.append(str(sticker.id))
 
-            # inserting the sticker data into the db.
-            sticker = dbDAL.insert_picture(path=sticker_path, x=sticker["x"], y=sticker["y"], angle=sticker["angle"], size=sticker["size"])
-            sticker_id_list.append(str(sticker.id))
+    slide = dbDAL.insert_slide(story_id=story_id,
+        background_color = background_color,
+        background_picture_id = background_picture.id,
+        pictures_list = picture_id_list + sticker_id_list,
+        text = text,
+        audio_path = audio_path,
+        thumbnail_path = thumbnail_path)
 
-        slide = dbDAL.insert_slide(path=background_picture_path,
-            background_color=background_color,
-            background_picture_id=background_picture.picture_id,
-            pictures_list=picture_id_list + sticker_id_list,
-            thumbnail_path=thumbnail_path)
-
-        response = {"status":"success", "slideId": str(slide.id)}
-    except Exception as e:
-        print(e)
-        response = {"status": "failed"}
+    response = {"status":"success", "slideId": str(slide.id)}
+    #except Exception as e:
+    #    print(e)
+    #    response = {"status": "failed"}
     return response
 
 @router.post("/SaveSlide", response_class=UJSONResponse)
 def delete_slide(user_uid: str, slide_id: str):
+    # TODO: Implement this
     pass
 
 
-# Find a better way to seperate the Logins from the story api.
+# TODO: Find a better way to seperate the Logins from the story api, 
+# these functions should be in a different folder + file in order to organize the code better
 @userRouter.post("/Login", response_class=UJSONResponse)
 def UserLogin(firebase_token:str): # (username:str, password:str):
     try:
         validated_firebase_obj = auth.verify_id_token(firebase_token ,app=fb_ctx)
         if not validated_firebase_obj:
             raise ValueError    
-        # validated_firebase_obj = {}
-        # validated_firebase_obj['sub'] = firebase_token
 
         if not dbDAL.get_user(validated_firebase_obj['sub']):
             dbDAL.insert_user(validated_firebase_obj['sub'], validated_firebase_obj['email'])
 
-        # real_pass = get_password(username) # TODO: see working
-        # if not user:
-        #     # The user shouldn't know whether the password incorrect or the user does not exist
-        #     return {
-        #         'status': 'failed',
-        #         'description': 'wrong user password or no such user'
-        #         }
-        # elif password != real_pass:
-        #     return {
-        #         'status': 'failed',
-        #         'description': 'wrong user password or no such user'
-        #         }
-
-        # in_db = True
-        # while in_db:
-        #     user_id = unpack("<I", urandom(4))[0]
-        #     in_db = user_id_in_db(user_id) # TODO: interface with real DB
-
-        # add_user_id_to_db(user_id) # TODO: interface with real DB
-
         return {
-            'status': 'success' # ,
-            # 'userId': user_id
+            'status': 'success'
             }
     
     except Exception as e:
@@ -308,7 +278,7 @@ def UserLogin(firebase_token:str): # (username:str, password:str):
             'description': 'Token not authorized.'
             }
 
-# Important notes:
+# TODO: Important notes:
 # - One should implement an expiration of userIds, so that never logged out userId wouldn't stay in the db forever.
 # - Can wrap user_id with JWT if you wish
 
@@ -329,8 +299,10 @@ def UserLogin(firebase_token:str): # (username:str, password:str):
 #             'status': 'success'
 #         }
 
+
 def auth_required(firebase_token: str):
     try:
+        # Checks if the user is properly authorozied to log in
         validated_firebase_obj = auth.verify_id_token(firebase_token, app=fb_ctx)
         if not validated_firebase_obj: # not userid_in_db(userId):
             return False, {
