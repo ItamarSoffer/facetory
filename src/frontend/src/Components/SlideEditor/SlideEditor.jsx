@@ -3,7 +3,8 @@ import Canvas from "../Canvas";
 import Colors from '../Colors'
 import Recorder from '../Recorder/Recorder';
 import ImagePopup from '../imageComponents/ImagePopup'
-
+import {connect} from 'react-redux'
+import {saveSlideAction} from '../../Actions/slideEditorActions'
 //HARD-CODED
 const slide =
 {
@@ -60,7 +61,7 @@ const slide =
     }
 }
 
-export default function SlideEditor() {
+const SlideEditor = (props) => {
     const recordBlob = useRef(null)
     const keyWordsTimes = useRef(null)
     const [isImagesPopupOpen, setIsImagesPopupOpen] = useState(false)
@@ -92,6 +93,56 @@ export default function SlideEditor() {
         setStickersOpen(!stickersOpen);
     }
 
+    /*
+    {imageUrl: string,
+backgroundColor: string,
+imagePosition: {x: int, y: int},
+imageAngle: int,
+imageSize: int,
+text: str,
+audio: blob
+pictures: [{
+    name: str,
+    data: blob,
+    x: int,
+    y: int,
+    angle: int
+    size: int
+}]
+stickers: [{
+src: string,
+x: int,
+y: int,
+size: int,
+angle: int
+}]
+}
+    */
+    const onSaveSlide = () => {
+        // construct slide data structure
+        const slideData =  {imageUrl: backgroundImageSrc,
+            backgroundColor: "",
+            imagePosition: backgroundImagePosition,
+            imageAngle: backgroundImageAngle,
+            imageSize: backgroundImageSize,
+            text: "test",
+            audio: recordBlob.current,
+            pictures: [/*
+                currently not supported 
+
+                {
+                name: "",
+                data: blob,
+                x: 0,
+                y: 0,
+                angle: 0,
+                size: 0
+            }*/],
+            stickers: stickers
+        
+        }
+        props.saveSlide(slideData)
+    }
     return (
         <div className='slide-editor-page'>
             <div>
@@ -138,9 +189,19 @@ export default function SlideEditor() {
                     onFinish={onRecorderFinish}
                     onDelete={onRecordDelete}
                 />
-                <button>שמירת השקופית</button>
+                <button onClick={onSaveSlide}>שמירת השקופית</button>
             </div>
             <ImagePopup isOpen={isImagesPopupOpen} setImageSource={setBackgroundImageSrc} close={() => { setIsImagesPopupOpen(false) }} />
         </div>
     )
 }
+
+const mapDispatchToProps = dispatch => {
+    return {
+        saveSlide: (slideData) => {
+            dispatch(saveSlideAction(slideData));
+        }
+    }
+};
+
+export default connect(null, mapDispatchToProps)(SlideEditor)
