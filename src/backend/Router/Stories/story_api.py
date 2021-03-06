@@ -9,26 +9,14 @@ import json
 router = APIRouter(
     prefix="/Story",
     tags=["Story"], 
-    # TODO: should read about how to properly add the auth_required for all the functions.
-    #dependencies=[Depends(auth_required)],
     responses={404: {"description": "Not found"}},
 )
 
 # TODO: Get this from somewhere else.
 dbDAL = MongoDAL()
-# TODO: Translate a user_uid to user_uid in the DB
 
 @router.post("/GetStories", response_class=UJSONResponse)
-def get_all_stories(firebase_token: str):
-    # TODO: This code gets repeated in each function. It happens because
-    # the identification doesn't work 100%, It should be a dependency(Read about FastAPI).
-    # We shouldn't relay on the user_uid that is written inside the decoded xtoken.
-    auth_worked, user_uid = auth_required(firebase_token)
-    if (not auth_worked):
-        return {
-                "status": "unauthorized",
-                "description": "User token is invalid"
-            }
+def get_all_stories(user_uid: str = Depends(auth_required)):
     try:
         all_stories = dbDAL.get_stories(user_id=user_uid)
 
@@ -48,7 +36,7 @@ def get_all_stories(firebase_token: str):
     return response
 
 @router.post("/CreateStory", response_class=UJSONResponse)
-def create_story(firebase_token: str, story_name: str, child_name: str, gender: str):
+def create_story(story_name: str, child_name: str, gender: str, user_uid: str = Depends(auth_required)):
     auth_worked, user_uid = auth_required(firebase_token)
     if (not auth_worked):
         return user_uid
@@ -64,13 +52,8 @@ def create_story(firebase_token: str, story_name: str, child_name: str, gender: 
                 "storyId": -1}
 
 @router.post("/UpdateStory", response_class=UJSONResponse)
-def update_story(firebase_token:str, story_id: str, story_name: str, child_name: str, gender: str):
-    auth_worked, user_uid = auth_required(firebase_token)
-    if (not auth_worked):
-        return {
-                "status": "unauthorized",
-                "description": "User token is invalid"
-            }
+def update_story(story_id: str, story_name: str, child_name: str, gender: str, user_uid: str = Depends(auth_required)):
+
     try:
         story = dbDAL.update_story(story_id=story_id, story_name=story_name, child_name=child_name, gender=gender)
 
@@ -84,14 +67,7 @@ def update_story(firebase_token:str, story_id: str, story_name: str, child_name:
                 "storyId": -1}
 
 @router.post("/DeleteStory", response_class=UJSONResponse)
-def delete_slide(firebase_token: str, story_id: str):
-    auth_worked, user_uid = auth_required(firebase_token)
-    if (not auth_worked):
-        return {
-                "status": "unauthorized",
-                "description": "User token is invalid"
-            }
-    
+def delete_story(story_id: str, user_uid: str = Depends(auth_required)):
     try:
         dbDAL.delete_story(story_id=story_id)
         response = {"status": "success"}
@@ -101,14 +77,7 @@ def delete_slide(firebase_token: str, story_id: str):
     return response
 
 @router.post("/GetSlides", response_class=UJSONResponse)
-def get_slides(firebase_token: str, story_id: str):
-    auth_worked, user_uid = auth_required(firebase_token)
-    if (not auth_worked):
-        return {
-                "status": "unauthorized",
-                "description": "User token is invalid"
-            }
-
+def get_slides(story_id: str, user_uid: str = Depends(auth_required)):
     try:
         story_slides = dbDAL.get_slides(story_id=story_id)
         # Creating the relevant json to send in the response.
@@ -121,14 +90,7 @@ def get_slides(firebase_token: str, story_id: str):
     return response
 
 @router.post("/GetSlide", response_class=UJSONResponse)
-def get_slide(firebase_token: str, slide_id: str):
-    auth_worked, user_uid = auth_required(firebase_token)
-    if (not auth_worked):
-        return {
-                "status": "unauthorized",
-                "description": "User token is invalid"
-            }
-
+def get_slide(slide_id: str, user_uid: str = Depends(auth_required)):
     try:
         slide = dbDAL.get_slide(slide_id=slide_id)
         response = {"status": "success", "slide": json_utils.format_slide_json(slide)}
@@ -138,14 +100,7 @@ def get_slide(firebase_token: str, slide_id: str):
     return response
 
 @router.post("/GetStoryThumbnail", response_class=UJSONResponse)
-def get_story_thumbnail(firebase_token: str, story_id: str):
-    auth_worked, user_uid = auth_required(firebase_token)
-    if (not auth_worked):
-        return {
-                "status": "unauthorized",
-                "description": "User token is invalid"
-            }
-
+def get_story_thumbnail(story_id: str, user_uid: str = Depends(auth_required)):
     try:
         story = dbDAL.get_slides(story_id=story_id)
 
@@ -159,14 +114,7 @@ def get_story_thumbnail(firebase_token: str, story_id: str):
     return response
 
 @router.post("/GetSlidesThumbnails", response_class=UJSONResponse)
-def get_slides_thumbnails(firebase_token: str, story_id: str):
-    auth_worked, user_uid = auth_required(firebase_token)
-    if (not auth_worked):
-        return {
-                "status": "unauthorized",
-                "description": "User token is invalid"
-            }
-
+def get_slides_thumbnails(story_id: str, user_uid: str = Depends(auth_required)):
     try:
         story_slides = dbDAL.get_slides(story_id=story_id)
 
@@ -183,20 +131,28 @@ def get_slides_thumbnails(firebase_token: str, story_id: str):
         response = {"status": "failed", "thumbnail": ""}   
     return response
 
+@router.post("/DeleteSlide", response_class=UJSONResponse)
+def delete_slide(slide_id: str, user_uid: str = Depends(auth_required)):
+    try:
+        dbDAL.delete_slide(slide_id=slide_id)
+        response = {"status": "success"}
+    except Exception as e:
+        print(e)
+        response = {"status": "failed"}   
+    return response
+
 # TODO: This function can be shortened
 @router.post("/SaveSlide", response_class=UJSONResponse)
-def save_slide(firebase_token: str, story_id: str, data: str):
-    auth_worked, user_uid = auth_required(firebase_token)
-    if (not auth_worked):
-        return {
-                "status": "unauthorized",
-                "description": "User token is invalid"
-            }
+def save_slide( story_id: str, data: str, user_uid: str = Depends(auth_required)):
+    """ This functions saves a slide into the DB.
+        Currently it only supports receiving and image from a URL.
+    """
     jsonData = json.loads(data)
+    
+    # Gets an image from the specified url.
     picture_bytes, picture_name = picture_utils.get_picture_data(jsonData["imageUrl"])
-    background_picture_path = path_utils.generate_resource_path(user_id=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
-    with open(background_picture_path, "wb+") as picture_file:
-        picture_file.write(picture_bytes)
+
+    background_picture_path = save_picture_in_resources(user_uid=user_uid, story_id=story_id, picture_name=picture_name, picture_bytes=picture_bytes)
     thumbnail_path = picture_utils.create_picture_thumbnail(background_picture_path)
 
     # Add support for audio_path(Simply read from the json)
@@ -215,9 +171,7 @@ def save_slide(firebase_token: str, story_id: str, data: str):
     if (jsonData.get("pictures") != None):
         for picture in jsonData["pictures"]:
             picture_bytes, picture_name = picture["data"], picture["name"]
-            picture_path = path_utils.generate_resource_path(user_id=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
-            with open(picture_path, "wb+") as picture_file:
-                picture_file.write(picture_bytes)
+            background_picture_path, thumbnail_path = save_picture_in_resources(user_uid=user_uid, story_id=story_id, picture_name=picture_name, picture_bytes=picture_bytes)
 
             # inserting the picture into the db.
             picture = dbDAL.insert_picture(path=picture_path, x=picture["x"], y=picture["y"], angle=picture["angle"], size=picture["size"])
@@ -242,24 +196,12 @@ def save_slide(firebase_token: str, story_id: str, data: str):
         thumbnail_path = thumbnail_path)
 
     response = {"status":"success", "slideId": str(slide.id)}
-    #except Exception as e:
-    #    print(e)
-    #    response = {"status": "failed"}
+
     return response
 
-@router.post("/DeleteSlide", response_class=UJSONResponse)
-def delete_slide(firebase_token: str, slide_id: str):
-    auth_worked, user_uid = auth_required(firebase_token)
-    if (not auth_worked):
-        return {
-                "status": "unauthorized",
-                "description": "User token is invalid"
-            }
-    
-    try:
-        dbDAL.delete_slide(slide_id=slide_id)
-        response = {"status": "success"}
-    except Exception as e:
-        print(e)
-        response = {"status": "failed"}   
-    return response
+def save_picture_in_resources(user_uid: str, story_id: str, picture_name: str, picture_bytes) -> str: 
+    background_picture_path = path_utils.generate_resource_path(user_id=user_uid, story_id=story_id, resource_type="Photos", resource_name=picture_name)        
+    with open(background_picture_path, "wb+") as picture_file:
+        picture_file.write(picture_bytes)
+
+    return background_picture_path

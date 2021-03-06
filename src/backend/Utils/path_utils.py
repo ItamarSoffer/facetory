@@ -14,4 +14,7 @@ def generate_resource_path(user_id: str, story_id: str, resource_type: str, reso
 
 
 def generate_sticker_path(sticker_name: str):
+    """ Generates a sticker path based on its name. 
+        All stickers should already be stored in the server beforehand, at \Resources\Stickers
+    """
     return path.join("Resources", "Stickers", sticker_name)

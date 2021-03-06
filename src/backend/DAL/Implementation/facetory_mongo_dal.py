@@ -4,7 +4,6 @@ from src.backend.mongo_db import *
 
 from mongoengine import *
 
-
 class MongoDAL(FacetoryDAL):
     DEFAULT_HOST = '127.0.0.1'
     DEFAULT_PORT = 27017

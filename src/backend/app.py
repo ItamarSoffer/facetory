@@ -12,6 +12,7 @@ app.mount("/Resources", StaticFiles(directory="Resources"), "Resources")
 app.include_router(story_api.router)
 app.include_router(user_api.userRouter)
 
+# Initializing the credentials and the private key for the firebase authentication.
 cred = credentials.Certificate(r"src\backend\facetory_creds.json")
 fb_ctx = initialize_app(cred)
 
