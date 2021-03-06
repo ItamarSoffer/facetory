@@ -15,6 +15,7 @@ src/frontend/node_modules/
 
 # production
 */build
+*build
 
 # misc
 .DS_Store
@@ -33,3 +34,4 @@ package-lock.json
 
 *.pyc
 *.egg-info
+*.egg
