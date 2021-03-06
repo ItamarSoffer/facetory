@@ -9,7 +9,8 @@ import json
 router = APIRouter(
     prefix="/Story",
     tags=["Story"], 
-    dependencies=[Depends(auth_required)],
+    # TODO: should read about how to properly add the auth_required for all the functions.
+    #dependencies=[Depends(auth_required)],
     responses={404: {"description": "Not found"}},
 )
 
