@@ -2,29 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from src.backend.DAL.Implementation.facetory_mongo_dal import MongoDAL
 from fastapi.responses import UJSONResponse
 from src.backend.Utils import path_utils, picture_utils, json_utils
-from src.backend.Router.Users import user_api
-from fastapi import APIRouter, Depends, HTTPException
-from firebase_admin import auth,credentials, initialize_app
+from src.backend.Router.Users.user_api import auth_required
 import pathlib
 import json
 
 router = APIRouter(
     prefix="/Story",
     tags=["Story"], 
-    responses={404: {"description": "Not found"}},
-)
-
-# TODO: Replace all the prints with proper logging library
-# Realy bad code. Should only run once!! need to find a better way to do this.
-# In addition we couldn't find a proper way to validate teh credentials in each function without 
-# Repeating the code. The dependencies simple didn't work properly - Should probably return a temp unique
-# Id to the user upon log-in.
-cred = credentials.Certificate(r"src\backend\facetory_creds.json")
-fb_ctx = initialize_app(cred)
-
-userRouter = APIRouter(
-    prefix="/User",
-    tags=["User"],
+    dependencies=[Depends(auth_required)],
     responses={404: {"description": "Not found"}},
 )
 
@@ -33,11 +18,11 @@ dbDAL = MongoDAL()
 # TODO: Translate a user_uid to user_uid in the DB
 
 @router.post("/GetStories", response_class=UJSONResponse)
-def get_all_stories(user_uid: str):
+def get_all_stories(firebase_token: str):
     # TODO: This code gets repeated in each function. It happens because
     # the identification doesn't work 100%, It should be a dependency(Read about FastAPI).
     # We shouldn't relay on the user_uid that is written inside the decoded xtoken.
-    auth_worked, user_uid = auth_required(user_uid)
+    auth_worked, user_uid = auth_required(firebase_token)
     if (not auth_worked):
         return {
                 "status": "unauthorized",
@@ -62,8 +47,8 @@ def get_all_stories(user_uid: str):
     return response
 
 @router.post("/CreateStory", response_class=UJSONResponse)
-def create_story(user_uid: str, story_name: str, child_name: str, gender: str):
-    auth_worked, user_uid = auth_required(user_uid)
+def create_story(firebase_token: str, story_name: str, child_name: str, gender: str):
+    auth_worked, user_uid = auth_required(firebase_token)
     if (not auth_worked):
         return user_uid
     try:
@@ -78,8 +63,8 @@ def create_story(user_uid: str, story_name: str, child_name: str, gender: str):
                 "storyId": -1}
 
 @router.post("/UpdateStory", response_class=UJSONResponse)
-def update_story(user_uid:str, story_id: str, story_name: str, child_name: str, gender: str):
-    auth_worked, user_uid = auth_required(user_uid)
+def update_story(firebase_token:str, story_id: str, story_name: str, child_name: str, gender: str):
+    auth_worked, user_uid = auth_required(firebase_token)
     if (not auth_worked):
         return {
                 "status": "unauthorized",
@@ -98,13 +83,13 @@ def update_story(user_uid:str, story_id: str, story_name: str, child_name: str, 
                 "storyId": -1}
 
 @router.post("/CreateStory", response_class=UJSONResponse)
-def delete_story(user_uid:str, story_id: str):
+def delete_story(firebase_token:str, story_id: str):
     # TODO: Implement this
     pass
 
 @router.post("/GetSlides", response_class=UJSONResponse)
-def get_slides(user_uid: str, story_id: str):
-    auth_worked, user_uid = auth_required(user_uid)
+def get_slides(firebase_token: str, story_id: str):
+    auth_worked, user_uid = auth_required(firebase_token)
     if (not auth_worked):
         return {
                 "status": "unauthorized",
@@ -123,8 +108,8 @@ def get_slides(user_uid: str, story_id: str):
     return response
 
 @router.post("/GetSlide", response_class=UJSONResponse)
-def get_slide(user_uid: str, slide_id: str):
-    auth_worked, user_uid = auth_required(user_uid)
+def get_slide(firebase_token: str, slide_id: str):
+    auth_worked, user_uid = auth_required(firebase_token)
     if (not auth_worked):
         return {
                 "status": "unauthorized",
@@ -140,8 +125,8 @@ def get_slide(user_uid: str, slide_id: str):
     return response
 
 @router.post("/GetStoryThumbnail", response_class=UJSONResponse)
-def get_story_thumbnail(user_uid: str, story_id: str):
-    auth_worked, user_uid = auth_required(user_uid)
+def get_story_thumbnail(firebase_token: str, story_id: str):
+    auth_worked, user_uid = auth_required(firebase_token)
     if (not auth_worked):
         return {
                 "status": "unauthorized",
@@ -161,8 +146,8 @@ def get_story_thumbnail(user_uid: str, story_id: str):
     return response
 
 @router.post("/GetSlidesThumbnails", response_class=UJSONResponse)
-def get_slides_thumbnails(user_uid: str, story_id: str):
-    auth_worked, user_uid = auth_required(user_uid)
+def get_slides_thumbnails(firebase_token: str, story_id: str):
+    auth_worked, user_uid = auth_required(firebase_token)
     if (not auth_worked):
         return {
                 "status": "unauthorized",
@@ -187,8 +172,8 @@ def get_slides_thumbnails(user_uid: str, story_id: str):
 
 # TODO: This function can be shortened
 @router.post("/SaveSlide", response_class=UJSONResponse)
-def save_slide(user_uid: str, story_id: str, data: str):
-    auth_worked, user_uid = auth_required(user_uid)
+def save_slide(firebase_token: str, story_id: str, data: str):
+    auth_worked, user_uid = auth_required(firebase_token)
     if (not auth_worked):
         return {
                 "status": "unauthorized",
@@ -250,71 +235,6 @@ def save_slide(user_uid: str, story_id: str, data: str):
     return response
 
 @router.post("/SaveSlide", response_class=UJSONResponse)
-def delete_slide(user_uid: str, slide_id: str):
+def delete_slide(firebase_token: str, slide_id: str):
     # TODO: Implement this
     pass
-
-
-# TODO: Find a better way to seperate the Logins from the story api, 
-# these functions should be in a different folder + file in order to organize the code better
-@userRouter.post("/Login", response_class=UJSONResponse)
-def UserLogin(firebase_token:str): # (username:str, password:str):
-    try:
-        validated_firebase_obj = auth.verify_id_token(firebase_token ,app=fb_ctx)
-        if not validated_firebase_obj:
-            raise ValueError    
-
-        if not dbDAL.get_user(validated_firebase_obj['sub']):
-            dbDAL.insert_user(validated_firebase_obj['sub'], validated_firebase_obj['email'])
-
-        return {
-            'status': 'success'
-            }
-    
-    except Exception as e:
-        print(e)
-        return {
-            'status': 'failed',
-            'description': 'Token not authorized.'
-            }
-
-# TODO: Important notes:
-# - One should implement an expiration of userIds, so that never logged out userId wouldn't stay in the db forever.
-# - Can wrap user_id with JWT if you wish
-
-# @router.post("/Logout", response_class=UJSONResponse)
-# def UserLogout(user_id:int):
-#     try:
-#         if not remove_user_id_from_db(user_id): # TODO: interface with real db
-#             # can add logic here, user shouldn't know whether the userId really existed, therefore returning success
-#             return {
-#                 'status': 'success'
-#             }
-#         return {
-#             'status': 'success'
-#         }
-    
-#     except Exception as e:
-#         return {
-#             'status': 'success'
-#         }
-
-
-def auth_required(firebase_token: str):
-    try:
-        # Checks if the user is properly authorozied to log in
-        validated_firebase_obj = auth.verify_id_token(firebase_token, app=fb_ctx)
-        if not validated_firebase_obj: # not userid_in_db(userId):
-            return False, {
-                "status": "unauthorized",
-                "description": "User token is invalid"
-            }
-        # validated_firebase_obj = {}
-        # validated_firebase_obj['sub'] = firebase_token
-        return True, validated_firebase_obj['sub']
-    except Exception as e:
-        print(e)
-        return False, {
-            "status": "unauthorized",
-            "description": "User token is invalid, Unknown error"
-        }
