@@ -38,7 +38,6 @@ def UserLogin(firebase_token:str):
 
 def auth_required(firebase_token: str):
     try:
-        return "604158ffb8620359b0f7ac8e"
         # Checks if the user is properly authorozied to log in
         validated_firebase_obj = auth.verify_id_token(firebase_token, app=get_app())
         # If the token is invalid or the user is not in our DB.
