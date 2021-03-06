@@ -83,10 +83,22 @@ def update_story(firebase_token:str, story_id: str, story_name: str, child_name:
         return {"status": "failed",
                 "storyId": -1}
 
-@router.post("/CreateStory", response_class=UJSONResponse)
-def delete_story(firebase_token:str, story_id: str):
-    # TODO: Implement this
-    pass
+@router.post("/DeleteStory", response_class=UJSONResponse)
+def delete_slide(firebase_token: str, story_id: str):
+    auth_worked, user_uid = auth_required(firebase_token)
+    if (not auth_worked):
+        return {
+                "status": "unauthorized",
+                "description": "User token is invalid"
+            }
+    
+    try:
+        dbDAL.delete_story(story_id=story_id)
+        response = {"status": "success"}
+    except Exception as e:
+        print(e)
+        response = {"status": "failed"}   
+    return response
 
 @router.post("/GetSlides", response_class=UJSONResponse)
 def get_slides(firebase_token: str, story_id: str):
@@ -235,7 +247,19 @@ def save_slide(firebase_token: str, story_id: str, data: str):
     #    response = {"status": "failed"}
     return response
 
-@router.post("/SaveSlide", response_class=UJSONResponse)
+@router.post("/DeleteSlide", response_class=UJSONResponse)
 def delete_slide(firebase_token: str, slide_id: str):
-    # TODO: Implement this
-    pass
+    auth_worked, user_uid = auth_required(firebase_token)
+    if (not auth_worked):
+        return {
+                "status": "unauthorized",
+                "description": "User token is invalid"
+            }
+    
+    try:
+        dbDAL.delete_slide(slide_id=slide_id)
+        response = {"status": "success"}
+    except Exception as e:
+        print(e)
+        response = {"status": "failed"}   
+    return response

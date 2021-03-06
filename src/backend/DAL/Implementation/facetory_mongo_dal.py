@@ -84,3 +84,13 @@ class MongoDAL(FacetoryDAL):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             if AppUser.objects(google_id=google_id):
                 return AppUser.objects.get(google_id=google_id)
+    
+    def delete_slide(self, slide_id):
+        with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
+            slide = Slide.objects.get(id=slide_id)
+            return slide.delete()
+    
+    def delete_story(self, story_id):
+        with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
+            story = Story.objects.get(id=story_id)
+            return story.delete()
