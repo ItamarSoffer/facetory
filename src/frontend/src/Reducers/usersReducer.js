@@ -14,7 +14,9 @@ const initState = {
     jwtToken: (jwtTokenLocalStorage !== null ? jwtTokenLocalStorage : ''),
   //  currentStory :  (currentStoryLocalStorage !== null ? currentStoryLocalStorage : '')
     slidesCache : null,
-  currentStory : null
+    currentStory : null
+    createStoryStatus : "",
+    stories: {}
 };
 
 const usersReducer = (state = initState, action) => {
@@ -36,8 +38,6 @@ const usersReducer = (state = initState, action) => {
  
             break;
         case "SAVE_SLIDE":
-
-
             apiSaveSlide(action.payload.slideData).then((response) => {
                 if (response.status === 201){
                     message.warning(response.data)
@@ -51,7 +51,19 @@ const usersReducer = (state = initState, action) => {
                 
                 }
             });
-            
+        case "CREATE_STORY_SUCCESS":
+            state = {
+                ...state,
+                createStoryStatus: "success",
+                currentStory:  action.payload.storyId,
+                stories: {...state.stories, [action.payload.storyId]: {slides: []}}
+            }
+            break;
+        case "CREATE_STORY_LOADING":
+            state = {
+                ...state,
+                createStoryStatus: 'loading',
+            }
             break;
         default:
             break;

@@ -3,8 +3,10 @@ import Canvas from "../Canvas";
 import Colors from '../Colors'
 import Recorder from '../Recorder/Recorder';
 import ImagePopup from '../imageComponents/ImagePopup'
+
 import {connect} from 'react-redux'
 import {saveSlideAction} from '../../Actions/slideEditorActions'
+
 //HARD-CODED
 const slide =
 {
@@ -143,6 +145,7 @@ angle: int
         }
         props.saveSlide(slideData)
     }
+
     return (
         <div className='slide-editor-page'>
             <div>
