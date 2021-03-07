@@ -1,5 +1,7 @@
 import { Form, Input, Button, Card, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import firebase from "firebase/app";
+import "firebase/auth";
 const { Title } = Typography;
 
 
@@ -7,11 +9,11 @@ const { Title } = Typography;
 export const LoginForm = ({loginHandler}) => {
 
     const onFinish = (values) => {
-      
+
       console.log('Received values of form: ', values);
       return loginHandler(values.username, values.password)
     };
-  
+
     return (
       <div
           style={{
@@ -30,7 +32,7 @@ export const LoginForm = ({loginHandler}) => {
                   borderRadius: '12px',
                   borderColor: '#ddd',
                   minHeight: 300
-  
+
               }}>
               <Title level={1} style={{textAlign:"center"}}>Tell Your Story </Title>
               <Form
@@ -38,7 +40,7 @@ export const LoginForm = ({loginHandler}) => {
                   className="login-form"
                   initialValues={{remember: true}}
                   onFinish={onFinish}
-  
+
               >
                   <Form.Item
                       name="username"
@@ -56,16 +58,25 @@ export const LoginForm = ({loginHandler}) => {
                           placeholder="Password"
                       />
                   </Form.Item>
-  
+
                   <Form.Item>
                       <Button type="primary" htmlType="submit" className="login-form-button" style={{width: '350px'}}>
                           Log in
                       </Button>
-  
+
+                  </Form.Item>
+
+                  <Form.Item>
+                      <Button type="primary" className="login-form-button" style={{width: '350px'}} onClick={()=>{
+                          const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+                          firebase.auth().signInWithPopup(googleAuthProvider);
+                      }}>
+                          Log in with Google
+                      </Button>
+
                   </Form.Item>
               </Form>
           </Card>
       </div>
   );
   };
-  

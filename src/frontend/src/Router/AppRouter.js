@@ -2,7 +2,7 @@ import React from 'react';
 import {
     BrowserRouter as Router,
     Switch,
-    Route,
+    Route
 } from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import HomePage from "../Pages/HomePage";
@@ -12,20 +12,31 @@ import EditStoryPage from "../Pages/EditStoryPage";
 import StoryMainPage from "../Pages/StoryMainPage";
 import ImagePopup from '../Components/imageComponents/ImagePopup';
 
+import {FirebaseAuthConsumer} from "@react-firebase/auth";
+import {LoadingComponent} from '../Components/LoadingComponent/LoadingComponent';
+import AppMenu from '../Components/HomePage/AppMenu';
 
-export default function AppRouter(props) {
 
+export default function AppRouter() {
     return (
         <Router>
             <Switch>
+                <FirebaseAuthConsumer>
+                    {({isSignedIn, providerId}) => {
+                        if (providerId === null) {
+                            return <LoadingComponent/>;
+                        }
+                        if (!isSignedIn) {
+                            return <div>
+                                <Route path="/" component={LoginPage}/>
+                            </div>;
+                        }
+                        return <div>
+                            {AppMenu()}
+                            {/* TODO: adapt url */}
+                            <Route path="/story/:story_id/view" exact={true} component={StoryViewerPage}/>
 
-                {
-                    !props.isLogged ?
-
-                        <div>
-                            <Route path="/" component={LoginPage} />
-                        </div> :
-                        <div>
+                            <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage}/>
 
                             {/* TODO: adapt url */}
                             <Route path="/story/:story_id/view" exact={true} component={StoryViewerPage} />
@@ -45,9 +56,8 @@ export default function AppRouter(props) {
 
                         </div>
                 }
-            </Switch>
-
-        </Router>
+             </FirebaseAuthConsumer>
+        </Switch>
+    </Router>
     )
-
 }
