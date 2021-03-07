@@ -14,7 +14,7 @@ const initState = {
     jwtToken: (jwtTokenLocalStorage !== null ? jwtTokenLocalStorage : ''),
   //  currentStory :  (currentStoryLocalStorage !== null ? currentStoryLocalStorage : '')
     slidesCache : null,
-    currentStory : null
+    currentStory : null,
     createStoryStatus : "",
     stories: {}
 };
