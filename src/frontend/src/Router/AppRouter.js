@@ -15,6 +15,7 @@ import ImagePopup from '../Components/imageComponents/ImagePopup';
 import {FirebaseAuthConsumer} from "@react-firebase/auth";
 import {LoadingComponent} from '../Components/LoadingComponent/LoadingComponent';
 import AppMenu from '../Components/HomePage/AppMenu';
+import SlideEditor from '../Components/SlideEditor/SlideEditor';
 
 
 export default function AppRouter() {
@@ -32,16 +33,13 @@ export default function AppRouter() {
                             </div>;
                         }
                         return <div>
-                            {AppMenu()}
+                            {/* {AppMenu()} */}
                             {/* TODO: adapt url */}
                             <Route path="/story/:story_id/view" exact={true} component={StoryViewerPage}/>
 
-                            <Route path="/story/:story_id/editor" exact={true} component={SlideEditorPage}/>
+                            <Route path="/story/:story_id/editor" exact={true} component={SlideEditor}/>
 
-                            {/* TODO: adapt url */}
-                            <Route path="/story/:story_id/view" exact={true} component={StoryViewerPage} />
-
-                             <Route path="/story/:storyId"  exact={true} component={EditStoryPage}/>
+                            <Route path="/story/:storyId"  exact={true} component={EditStoryPage}/>
                                     
                              <Route path="/story/:storyId/main"  exact={true} component={StoryMainPage}/>
 
@@ -55,6 +53,7 @@ export default function AppRouter() {
                             <Route exact path="/" component={HomePage} />
 
                         </div>
+                    }
                 }
              </FirebaseAuthConsumer>
         </Switch>
