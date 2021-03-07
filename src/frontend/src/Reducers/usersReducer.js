@@ -1,3 +1,5 @@
+import {apiSaveSlide} from '../API/SaveSlideAPI'
+import {message} from 'antd'
 /*
 Saves the JWT authentication key and the current logged user.
 the JWT token is provided by the server after the login has succeed.
@@ -10,7 +12,9 @@ const jwtTokenLocalStorage = window.localStorage.getItem('jwtToken');
 const initState = {
     loggedUser: (loggedUserLocalStorage !== null ? loggedUserLocalStorage : null),
     jwtToken: (jwtTokenLocalStorage !== null ? jwtTokenLocalStorage : ''),
-    //  currentStory :  (currentStoryLocalStorage !== null ? currentStoryLocalStorage : '')
+  //  currentStory :  (currentStoryLocalStorage !== null ? currentStoryLocalStorage : '')
+    slidesCache : null,
+    currentStory : null
     createStoryStatus : "",
     stories: {}
 };
@@ -33,6 +37,20 @@ const usersReducer = (state = initState, action) => {
             };
  
             break;
+        case "SAVE_SLIDE":
+            apiSaveSlide(action.payload.slideData).then((response) => {
+                if (response.status === 201){
+                    message.warning(response.data)
+                }
+                else if (response.status === 200){
+                    message.success(`Slide Saved successfully 😄`, 1.5);
+                    state = {...state,
+                        // TODO: add dict of saved slides 
+                        slidesCache: response.data.slideId,
+                    };
+                
+                }
+            });
         case "CREATE_STORY_SUCCESS":
             state = {
                 ...state,
