@@ -1,6 +1,9 @@
+from abc import ABC, abstractmethod
 from src.backend.DAL.facetory_dal import FacetoryDAL
 from src.backend.mongo_db import *
+
 from mongoengine import *
+
 
 class MongoDAL(FacetoryDAL):
     DEFAULT_HOST = '127.0.0.1'
@@ -36,7 +39,8 @@ class MongoDAL(FacetoryDAL):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             return AppUser.objects.get(google_id=user_id).stories
 
-    def insert_slide(self, story_id: str, background_color: str, background_picture_id: str, pictures_list: list, text: str, audio_path: str, thumbnail_path: str):
+    def insert_slide(self, story_id: str, background_color: str, background_picture_id: str, pictures_list: list[int],
+                     thumbnail_path: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             background_pic = Picture.objects.get(id=background_picture_id)
             story_slide = Slide(background_color=background_color, background_picture=background_pic,
@@ -55,7 +59,7 @@ class MongoDAL(FacetoryDAL):
 
     def get_slides(self, story_id: str):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            return Story.objects.get(id=story_id).slides
+            return Story.objects.get(id=story_id).slides 
 
     def insert_picture(self, path: str, x: float, y: float, angle: float, size: float):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
@@ -81,13 +85,3 @@ class MongoDAL(FacetoryDAL):
         with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
             if AppUser.objects(google_id=google_id):
                 return AppUser.objects.get(google_id=google_id)
-    
-    def delete_slide(self, slide_id):
-        with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            slide = Slide.objects.get(id=slide_id)
-            return slide.delete()
-    
-    def delete_story(self, story_id):
-        with connect(MongoDAL.DB_NAME, host=self.host, port=self.port, alias=MongoDAL.DEFAULT_ALIAS):
-            story = Story.objects.get(id=story_id)
-            return story.delete()

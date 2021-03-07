@@ -5,11 +5,14 @@ requirements = [
     "fastapi",
     "uvicorn",
     "MongoEngine",
-    "aiofiles"
+    "aiofiles",
+    "ujson",
+    "Pillow",
+    "firebase_admin"
 ]
 
 setuptools.setup(
-    name="factory_server",
+    name="facetory",
     version="1.0",
     license="MIT",
     author="kks",
