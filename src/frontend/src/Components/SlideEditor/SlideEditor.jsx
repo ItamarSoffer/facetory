@@ -3,6 +3,7 @@ import Canvas from "../Canvas";
 import Colors from '../Colors'
 import Recorder from '../Recorder/Recorder';
 import ImagePopup from '../imageComponents/ImagePopup'
+import axios from 'axios';
 
 //HARD-CODED
 const slide =
@@ -60,7 +61,8 @@ const slide =
     }
 }
 
-export default function SlideEditor() {
+export default function SlideEditor(props) {
+    const {storyId} = props;
     const recordBlob = useRef(null)
     const keyWordsTimes = useRef(null)
     const [isImagesPopupOpen, setIsImagesPopupOpen] = useState(false)
@@ -92,6 +94,17 @@ export default function SlideEditor() {
         setStickersOpen(!stickersOpen);
     }
 
+    // const saveSlide = async () => {
+    //     await axios.post("http://localhost/SaveSlide", {
+    //         userId: 12,
+    //         slideName: "test",
+    //         storyId
+    //     })
+    // }
+    // console.log({
+
+    // })
+    // params: userId, slideName, storyId, templateId, text, audio, photo0,
     return (
         <div className='slide-editor-page'>
             <div>

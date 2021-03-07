@@ -10,8 +10,9 @@ const jwtTokenLocalStorage = window.localStorage.getItem('jwtToken');
 const initState = {
     loggedUser: (loggedUserLocalStorage !== null ? loggedUserLocalStorage : null),
     jwtToken: (jwtTokenLocalStorage !== null ? jwtTokenLocalStorage : ''),
-  //  currentStory :  (currentStoryLocalStorage !== null ? currentStoryLocalStorage : '')
-  currentStory : null
+    //  currentStory :  (currentStoryLocalStorage !== null ? currentStoryLocalStorage : '')
+    createStoryStatus : "",
+    stories: {}
 };
 
 const usersReducer = (state = initState, action) => {
@@ -31,6 +32,20 @@ const usersReducer = (state = initState, action) => {
                 currentStory: action.payload.currentStory,
             };
  
+            break;
+        case "CREATE_STORY_SUCCESS":
+            state = {
+                ...state,
+                createStoryStatus: "success",
+                currentStory:  action.payload.storyId,
+                stories: {...state.stories, [action.payload.storyId]: {slides: []}}
+            }
+            break;
+        case "CREATE_STORY_LOADING":
+            state = {
+                ...state,
+                createStoryStatus: 'loading',
+            }
             break;
         default:
             break;
