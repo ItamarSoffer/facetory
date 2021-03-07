@@ -46,7 +46,7 @@ const validateMessages = {
 // in create i receive a valid storyId and setStoryId which i create with useState in CreateStoryPage
 
 export const CreateStoryForm = (props) => {
-    const {history, setCurrentStoryHandler} = props;
+    const {history, createStory, isLoading} = props;
     const createStoryHandler = (values) => {
         var {Title, childName, gender} = values;
     const userToekn = window.localStorage.getItem('jwtToken');
@@ -55,13 +55,9 @@ export const CreateStoryForm = (props) => {
         // fix bug where default seleciton is not passed in values
         gender = 'male'
     }
-    apiCreateStory(userToekn, Title, childName, gender, (storyId) => {
-        // redirect to story editor!!
-        setCurrentStoryHandler({storyId, storyName : Title, childName, gender})
-        history.push({pathname: `/story/${storyId}/`, })
-    });
+    createStory(Title, childName, gender);
   };
-  return <ChangeStoryForm formButtonName="צור סיפור" formSubmitHandler={createStoryHandler}/>
+  return <ChangeStoryForm formButtonName="צור סיפור" formSubmitHandler={createStoryHandler} isLoading={isLoading}/>
 };
 
 export const GenericCardWrapper = props => {
@@ -92,6 +88,7 @@ export const GenericCardWrapper = props => {
 }
 export const ChangeStoryForm = (props) =>
 {
+    const {isLoading} = props;
     const {formButtonName, formSubmitHandler, storyData = {storyName : '', childName : '', gender : 'male'}} = props
     const [genderRadioValue, setGenderRadioValue] = useState(storyData.gender)
       return (
@@ -131,7 +128,7 @@ export const ChangeStoryForm = (props) =>
          </Form.Item>
 
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 0 }}>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={isLoading}>
             {formButtonName}
         </Button>
         </Form.Item>

@@ -9,17 +9,20 @@ import {EditStoryForm, AllSlidesView} from "../Components/EditStoryPage/EditStor
 import { Form, Card, Input, Button } from 'antd';
 import {GenericCardWrapper} from "../Components/CreateStoryPage/CreateStoryComponent";
 import { connect } from 'react-redux';
+import { getUserId } from '../utils/auth';
 
 
 export const  EditStoryPage = (props) =>
 {
-    const storyId = props.currentStory.storyId
+    const {currentStory} = props;
+    const {storyId} = useParams();
+    // const {storyId} = currentStory
     const history = useHistory();
     const [slides,  setSlides] = useState([]);
     //const [storyId, setStoryId] = useState(0)
     useEffect(() => {
         // populate Slides
-        const userToekn = window.localStorage.getItem('jwtToken');
+        const userToekn = getUserId();
         apiGetSlides(userToekn, storyId).then((response) => {
             if (response.status === 201){
                 console.log("error with getting slides")
@@ -50,9 +53,7 @@ export const  EditStoryPage = (props) =>
 const mapStateToProps = state => {
     return {    
         currentStory: state.usersReducer.currentStory,
-
     }
 };
-
 
 export default connect(mapStateToProps, null)(withRouter(EditStoryPage));

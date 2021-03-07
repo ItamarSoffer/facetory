@@ -3,6 +3,7 @@ import { useHistory, useLocation, useParams, withRouter } from 'react-router-dom
 import { Image, Layout, Row } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import SlideCard from '../Components/SlideCard/SliceCard';
+import SlideEditor from '../Components/SlideEditor/SlideEditor';
 import {
     ApartmentOutlined,
   } from '@ant-design/icons';
@@ -51,7 +52,7 @@ const StoryMainPage = withRouter((props) => {
             style={{
                 height: '100vh',
                 backgroundColor: '#ffffff',
-                boxShadow: '10px 10px 10px 10px',
+                boxShadow: '10px 0px 10px 10px',
                 }}
                 >
                 <Row justify='center' style={{marginTop: '10px'}}>
@@ -73,11 +74,9 @@ const StoryMainPage = withRouter((props) => {
                     <NewSquare style={{marginTop: '10px'}} onClick={() => console.log('newSlide')}/>
                 </Row>
             </Sider>
-            <Content>
-                <div>
-                    <Image src={currentImageUrl}/>
-                </div>
-            </Content>
+                <SlideEditor/>
+            {/* <Content>
+            </Content> */}
         </Layout>
     )}
 );

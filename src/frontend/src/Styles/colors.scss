@@ -1,0 +1,40 @@
+.colors {
+  flex-grow: 1;
+  height: 5vh;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+
+  .color-button {
+    transition: opacity ease 0.3s;
+
+    &.current-color {
+      border: lightblue 2px solid;
+    }
+
+    width: 4.5vh;
+    height: 4.5vh;
+    border-radius: 50%;
+    -webkit-box-shadow: 0px 1px 11px -2px rgba(0, 0, 0, 0.54);
+    box-shadow: 0px 1px 11px -2px rgba(0, 0, 0, 0.54);
+    cursor: pointer;
+  }
+}
+
+.slide-canvas-wrapper {
+  width: 50vw;
+  height: 60vh;
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: relative;
+
+  &>* {
+    position: absolute;
+  }
+
+  // .slide-canvas-image{
+  //     margin: auto;
+  // }
+}
