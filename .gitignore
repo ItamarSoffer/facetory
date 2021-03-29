@@ -16,6 +16,7 @@ src/frontend/node_modules/
 
 # production
 */build
+*build
 
 # misc
 .DS_Store
@@ -31,3 +32,7 @@ yarn-error.log*
 
 src/frontend/package-lock.json
 package-lock.json
+
+*.pyc
+*.egg-info
+*.egg
